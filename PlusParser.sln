@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlusParser", "PlusParser\PlusParser.csproj", "{FA33C181-8814-42C2-A12A-E25BDD2A9189}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA33C181-8814-42C2-A12A-E25BDD2A9189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA33C181-8814-42C2-A12A-E25BDD2A9189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA33C181-8814-42C2-A12A-E25BDD2A9189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA33C181-8814-42C2-A12A-E25BDD2A9189}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
