@@ -3,14 +3,14 @@ using PlusParser.Tokens.Tokens;
 
 namespace PlusParser.Tokens.LexickTokens;
 
-public class BoolOperatorTokenType: TokenTypeBase
+public class ComaTokenType: TokenTypeBase
 {
-    public BoolOperatorTokenType() : base(@"<=|^<|^>")
+    public ComaTokenType() : base(@",")
     {
     }
 
     public override TokenBase CreateToken(Match match)
     {
-        return new BoolOperatorToken(match.Value, match.Index, match.Length);
+        return new ComaToken(match.Value, match.Index, match.Length);
     }
 }

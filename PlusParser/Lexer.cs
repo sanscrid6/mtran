@@ -9,6 +9,7 @@ public static class Lexer
     private static List<TokenTypeBase> _lexicalTokens = new()
     {
         new EOLTokenType(),
+        new ComaTokenType(),
         new ColonTokenType(),
         new CoutTokenType(),
         new CinTokenType(),
@@ -19,6 +20,7 @@ public static class Lexer
         new StreamOperatorTokenType(),
         new BoolOperatorTokenType(),
         new OperatorTokenType(),
+        new CaseTokenType(),
         new CloseParamsTokenType(),
         new OpenParamsTokenType(),
         new OpenCodeBlockTokenType(),
@@ -35,9 +37,9 @@ public static class Lexer
         new UsingNamespaceTokenType(),
         new StringLiteralTokenType(),
         new StringTokenType(),
-        new VariableTokenType(),
-        new AssignTokenType(),
         new IntLiteralTokenType(),
+        new AssignTokenType(),
+        new VariableTokenType(),
     };
 
     public static Dictionary<TokenBase, string> variables = new();

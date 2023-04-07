@@ -9,6 +9,10 @@ public interface IOperator
 {
 }
 
+public interface ILiteral
+{
+}
+
 public abstract class TokenBase
 {
     public readonly string value;
@@ -31,5 +35,17 @@ public abstract class TokenBase
 
     public virtual void FillTable(List<TokenBase> nextTokens)
     {
+    }
+
+    public override string ToString()
+    {
+        return value;
+    }
+
+
+    public bool IsLiteral()
+    {
+        return this is StringLiteralToken || this is FloatLiteralToken || this is IntLiteralToken ||
+               this is CharLiteralToken;
     }
 }
