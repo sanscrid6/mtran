@@ -9,8 +9,8 @@ public class BoolOperatorTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new BoolOperatorToken(match.Value, match.Index, match.Length);
+        return new BoolOperatorToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

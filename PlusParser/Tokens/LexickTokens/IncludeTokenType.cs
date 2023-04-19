@@ -5,12 +5,12 @@ namespace PlusParser.Tokens.LexickTokens;
 
 public class IncludeTokenType: TokenTypeBase
 {
-    public IncludeTokenType() : base(@"#include <\w+>\r?\n?")
+    public IncludeTokenType() : base(@"#include <\w+>")
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new IncludeToken(match.Value, match.Index, match.Length);
+        return new IncludeToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

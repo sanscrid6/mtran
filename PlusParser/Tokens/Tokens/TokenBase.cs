@@ -18,14 +18,14 @@ public abstract class TokenBase
     public readonly string value;
     public readonly int start;
     public readonly int end;
+    public readonly int lineNumber;
 
-    public Type[] next = Array.Empty<Type>();
-
-    public TokenBase(string val, int start, int end)
+    public TokenBase(string val, int start, int end, int lineNumber)
     {
         value = val;
         this.start = start;
         this.end = end;
+        this.lineNumber = lineNumber;
     }
 
     public virtual bool IsValid(List<TokenBase> nextTokens)
@@ -42,6 +42,15 @@ public abstract class TokenBase
         return value;
     }
 
+    public static void BuildError(string text, int start, int line)
+    {
+        throw new Exception($"line {line + 1}:{start}: {text}");
+    }
+
+    public static void BuildError(string text)
+    {
+        throw new Exception($"{text}");
+    }
 
     public bool IsLiteral()
     {

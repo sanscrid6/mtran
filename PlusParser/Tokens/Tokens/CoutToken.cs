@@ -2,7 +2,7 @@ namespace PlusParser.Tokens.Tokens;
 
 public class CoutToken: TokenBase
 {
-    public CoutToken(string val, int start, int end) : base(val, start, end)
+    public CoutToken(string val, int start, int end, int lineNumber) : base(val, start, end,  lineNumber)
     {
     }
 
@@ -10,10 +10,12 @@ public class CoutToken: TokenBase
     {
         var lineEndIndex = nextTokens.FindIndex(t => t is EOLToken);
         var line = nextTokens.Skip(0).Take(lineEndIndex + 1).ToList();
+
+        var boolOperator = line.Find(t => t is BoolOperatorToken);
         
-        if (line.Find(t => t is BoolOperatorToken) != null)
+        if (boolOperator != null)
         {
-            throw new Exception($"typo in << operator");
+            BuildError($"typo in << operator", boolOperator.start, boolOperator.lineNumber);
         }
 
         return true;

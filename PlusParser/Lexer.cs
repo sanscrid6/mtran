@@ -40,17 +40,24 @@ public static class Lexer
         new IntLiteralTokenType(),
         new AssignTokenType(),
         new VariableTokenType(),
+        new EmptyLineTokenType()
     };
 
-    public static Dictionary<TokenBase, string> variables = new();
+    public static Dictionary<string, string> variables = new();
     public static HashSet<string> keywords = new();
     public static HashSet<string> operators = new ();
+    public static HashSet<string> constants = new();
+
+    public static int offset = 0; 
     // public static Dictionary<Type, string> operators = new();
 
     public static List<TokenBase> Parse(string programLike)
     {
         var pos = 0;
         var tokens = new List<TokenBase>();
+        var lineNumber = 0;
+        var lineOffset = 0;
+        var hasExpressionOnLine = false;
         
         while (pos < programLike.Length)
         {
@@ -61,25 +68,37 @@ public static class Lexer
                 var match = lexToken.regex.Match(currString);
                 if (match.Success)
                 {
-                    token = lexToken.CreateToken(match);
+                    token = lexToken.CreateToken(match, lineOffset, lineNumber);
+                    if (!hasExpressionOnLine && token is not IncludeToken and not EmptyLineToken and not EOLToken)
+                    {
+                        hasExpressionOnLine = true;
+                    }
+
+                    if (hasExpressionOnLine && token is EmptyLineToken)
+                    {
+                        TokenBase.BuildError($"expected semicolon", lineOffset, lineNumber);
+                    }
+
                     pos += match.Length;
+                    lineOffset += match.Length;
+                    if (token is EOLToken or EmptyLineToken)
+                    {
+                        lineNumber++;
+                        lineOffset = 0;
+                        hasExpressionOnLine = false;
+                    }
                     break;
                 }
             }
 
-            if (token == null)
+            if (token is null)
             {
-                if (currString.StartsWith('\n') || currString.StartsWith('\r'))
-                {
-                    throw new Exception($"expected semicolon on position {pos}");
-                }
-
                 if (currString.StartsWith('"'))
-                {
-                    throw new Exception($"cant find string quote");
-                }
+                    TokenBase.BuildError($"cant find string quote", lineOffset, lineNumber);
+                if (currString.StartsWith("'"))
+                    TokenBase.BuildError($"cant find char quote", lineOffset, lineNumber);
 
-                throw new Exception($"error in program on position {pos} '{currString}'");
+                TokenBase.BuildError($"unknown error in program", lineOffset, lineNumber);
             }
             else
             {
@@ -94,10 +113,9 @@ public static class Lexer
 
     private static void Validate(List<TokenBase> tokens)
     {
-        tokens
-            .Where(t => t is IKeyword)
-            .ToList()
-            .ForEach(keyword => keywords.Add(keyword.value));
+        tokens.Where(t => t is IKeyword)
+              .ToList()
+              .ForEach(keyword => keywords.Add(keyword.value));
         
         tokens
             .Where(t => t is IOperator)

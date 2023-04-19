@@ -9,8 +9,8 @@ public class ComaTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new ComaToken(match.Value, match.Index, match.Length);
+        return new ComaToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

@@ -9,8 +9,8 @@ public class OpenParamsTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new OpenParamsToken(match.Value, match.Index, match.Length);
+        return new OpenParamsToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

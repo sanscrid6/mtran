@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\lab\\PlusParser\\PlusParser\\PlusParser.csproj",
+      "projectUniqueName": "D:\\lab\\mtran\\PlusParser\\PlusParser.csproj",
       "projectName": "PlusParser",
-      "projectPath": "D:\\lab\\PlusParser\\PlusParser\\PlusParser.csproj",
+      "projectPath": "D:\\lab\\mtran\\PlusParser\\PlusParser.csproj",
       "packagesPath": "C:\\Users\\sansc\\.nuget\\packages\\",
-      "outputPath": "D:\\lab\\PlusParser\\PlusParser\\obj\\",
+      "outputPath": "D:\\lab\\mtran\\PlusParser\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\sansc\\AppData\\Roaming\\NuGet\\NuGet.Config"

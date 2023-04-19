@@ -10,8 +10,8 @@ public class UsingNamespaceTokenType: TokenTypeBase
        
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new UsingNamespaceToken(match.Value, match.Index, match.Length);
+        return new UsingNamespaceToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

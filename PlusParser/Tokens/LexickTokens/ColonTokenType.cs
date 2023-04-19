@@ -9,8 +9,8 @@ public class ColonTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new ColonToken(match.Value, match.Index, match.Length);
+        return new ColonToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

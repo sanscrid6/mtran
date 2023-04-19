@@ -42,7 +42,7 @@ public static class Parser
 
       if (tokens.Count(t => t is OpenCodeBlockToken) != tokens.Count(t => t is CloseCodeBlockToken))
       {
-         throw new Exception("missing }");
+         TokenBase.BuildError("missing }");
       }
 
 
@@ -99,7 +99,8 @@ public static class Parser
    private static Node<TokenBase> BuildFor(List<TokenBase> tokens, Node<TokenBase> curr)
    {
       var forHead = tokens.Split(t => t is SemicolonToken);
-      if (forHead.Count < 3) throw new Exception("missing semicolon in for declaration");
+      if (forHead.Count < 3) 
+         TokenBase.BuildError("missing semicolon in for declaration", forHead[0][0].start, forHead[0][0].lineNumber);
       curr = curr.AddChildren(tokens[0]);
       BuildAssign(forHead[0], curr);
       BuildBooleanExpression(forHead[1], curr);
@@ -123,7 +124,8 @@ public static class Parser
       var variable = tokens.FindIndex(t => t is VariableToken);
       var literal = tokens.FindIndex(variable+1, t => t.IsLiteral() || t is VariableToken);
       var assign = tokens.Find(t => t is IOperator);
-      if (assign == null) return ;
+      if (assign == null) 
+         return;
       
       curr = curr.AddChildren(assign);
       if(variable != -1)
@@ -181,7 +183,7 @@ public static class Parser
    private static Node<TokenBase> BuildSwitch(List<TokenBase> tokens, Node<TokenBase> curr)
    {
       if (tokens.Find(t => t is OpenParamsToken) == null) 
-         throw new Exception("expected ( after switch");
+         TokenBase.BuildError("expected ( after switch", tokens[0].start, tokens[0].lineNumber);
       
       curr = curr.AddChildren(tokens.Find(t => t is SwitchToken)!);
       curr = curr.AddChildren(tokens.Find(t => t is VariableToken)!);
@@ -192,7 +194,7 @@ public static class Parser
    {
       curr = curr.AddChildren(tokens.Find(t => t is CaseToken)!);
       var caseVar = tokens.Find(t => t.IsLiteral());
-      if (caseVar == null) throw new Exception("expected literal in case ");
+      if (caseVar == null) TokenBase.BuildError("expected literal in case ");
       
       curr = curr.AddChildren(caseVar);
       return curr;

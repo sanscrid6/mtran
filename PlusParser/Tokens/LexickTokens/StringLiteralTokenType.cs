@@ -9,8 +9,8 @@ public class StringLiteralTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new StringLiteralToken(match.Value, match.Index, match.Length);
+        return new StringLiteralToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

@@ -7,7 +7,7 @@ public abstract class TokenTypeBase
 {
     public readonly Regex regex;
 
-    public abstract TokenBase CreateToken(Match match);
+    public abstract TokenBase CreateToken(Match match, int offset, int lineNumber);
 
     public TokenTypeBase(string regular)
     {

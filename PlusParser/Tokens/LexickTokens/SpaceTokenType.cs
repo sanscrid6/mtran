@@ -9,8 +9,8 @@ public class SpaceTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new SpaceToken(match.Value, match.Index, match.Length);
+        return new SpaceToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

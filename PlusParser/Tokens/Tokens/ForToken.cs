@@ -2,7 +2,7 @@ namespace PlusParser.Tokens.Tokens;
 
 public class ForToken: TokenBase, IKeyword
 {
-    public ForToken(string val, int start, int end) : base(val, start, end)
+    public ForToken(string val, int start, int end, int lineNumber) : base(val, start, end,  lineNumber)
     {
     }
 
@@ -10,14 +10,19 @@ public class ForToken: TokenBase, IKeyword
     {
         var closeClauseEndIndex = nextTokens.FindIndex(t => t is CloseParamsToken);
         var head = nextTokens.Skip(0).Take(closeClauseEndIndex + 1).ToList();
-        if (head.Count(t => t is SemicolonToken) != 2)
+        /*if (head.Count(t => t is SemicolonToken) != 2)
         {
-            throw new Exception("missing semicolon in for declaration");
-        }
+            BuildError("missing semicolon in for declaration", head[0].start, head[0].lineNumber);
+        }*/
 
         if (head.FirstOrDefault(t => t is OpenParamsToken) == null)
         {
-            throw new Exception("missing ( in for clause declaration");
+            BuildError("missing ( in for clause declaration", head[0].start, head[0].lineNumber);
+        }
+        
+        if (head.FirstOrDefault(t => t is CloseParamsToken) == null)
+        {
+            BuildError("missing ) in for clause declaration", head[0].start, head[0].lineNumber);
         }
         
         return true;

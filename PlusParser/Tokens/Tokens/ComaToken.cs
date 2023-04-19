@@ -2,7 +2,7 @@ namespace PlusParser.Tokens.Tokens;
 
 public class ComaToken: TokenBase
 {
-    public ComaToken(string val, int start, int end) : base(val, start, end)
+    public ComaToken(string val, int start, int end, int lineNumber) : base(val, start, end,  lineNumber)
     {
     }
 }

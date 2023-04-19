@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2MV06shwy9FpUEy9f4MG0a/0C29oEEvejvDEhDW8Km3XeP5QXJDtHlEvbCl3AbI+M7nlGqUUqrV6UmIxY9QUiA==",
+  "dgSpecHash": "7BWquT7JnWx1us5Hb30ZFqkKSTHOQ1QCZjS1apoKlyUqkxkJrZmUf98gZicSXx1+bqjWUIUVcwmuZeWRaAQuTg==",
   "success": true,
-  "projectFilePath": "D:\\lab\\PlusParser\\PlusParser\\PlusParser.csproj",
+  "projectFilePath": "D:\\lab\\mtran\\PlusParser\\PlusParser.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

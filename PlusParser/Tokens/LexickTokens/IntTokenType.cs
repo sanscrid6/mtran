@@ -10,8 +10,8 @@ public class IntTokenType: TokenTypeBase
       
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new IntToken(match.Value, match.Index, match.Length);
+        return new IntToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

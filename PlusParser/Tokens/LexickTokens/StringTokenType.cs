@@ -9,8 +9,8 @@ public class StringTokenType: TokenTypeBase
     {
     }
 
-    public override TokenBase CreateToken(Match match)
+    public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new StringToken(match.Value, match.Index, match.Length);;
+        return new StringToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }
