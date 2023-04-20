@@ -3,15 +3,14 @@ using PlusParser.Tokens.Tokens;
 
 namespace PlusParser.Tokens.LexickTokens;
 
-public class EOLTokenType: TokenTypeBase
+public class LogicOperatorTokenType: TokenTypeBase
 {
-    public EOLTokenType(): base(@";\s*\r?\n")
+    public LogicOperatorTokenType() : base(@"&&|^\|\|")
     {
-        
     }
 
     public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new EOLToken(match.Value, offset + match.Index, match.Length, lineNumber);
+        return new LogicOperatorToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

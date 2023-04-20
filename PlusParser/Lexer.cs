@@ -8,6 +8,7 @@ public static class Lexer
 {
     private static List<TokenTypeBase> _lexicalTokens = new()
     {
+        new CommentTokenType(),
         new EOLTokenType(),
         new ComaTokenType(),
         new ColonTokenType(),
@@ -39,17 +40,21 @@ public static class Lexer
         new StringTokenType(),
         new IntLiteralTokenType(),
         new AssignTokenType(),
+        new WhileTokenType(),
+        new VoidTokenType(),
+        new IfTokenType(),
+        new ElseTokenType(),
+        new OpenSquareBracketTokenType(),
+        new CloseSquareBracketTokenType(),
         new VariableTokenType(),
-        new EmptyLineTokenType()
+        new EmptyLineTokenType(),
+        new LogicOperatorTokenType()
     };
 
     public static Dictionary<string, string> variables = new();
     public static HashSet<string> keywords = new();
     public static HashSet<string> operators = new ();
     public static HashSet<string> constants = new();
-
-    public static int offset = 0; 
-    // public static Dictionary<Type, string> operators = new();
 
     public static List<TokenBase> Parse(string programLike)
     {
@@ -58,6 +63,11 @@ public static class Lexer
         var lineNumber = 0;
         var lineOffset = 0;
         var hasExpressionOnLine = false;
+        
+        if (programLike.Count(c => c == '"') % 2 != 0)
+            TokenBase.BuildError($"cant find string quote");
+        if (programLike.Count(c => c == "'".ToCharArray()[0]) % 2 != 0)
+            TokenBase.BuildError($"cant find char quote");
         
         while (pos < programLike.Length)
         {
@@ -69,35 +79,29 @@ public static class Lexer
                 if (match.Success)
                 {
                     token = lexToken.CreateToken(match, lineOffset, lineNumber);
-                    if (!hasExpressionOnLine && token is not IncludeToken and not EmptyLineToken and not EOLToken)
+                    
+                    if (!hasExpressionOnLine && token is not IncludeToken and not EmptyLineToken and not EOLToken and not CommentToken)
                     {
                         hasExpressionOnLine = true;
                     }
 
-                    if (hasExpressionOnLine && token is EmptyLineToken)
-                    {
-                        TokenBase.BuildError($"expected semicolon", lineOffset, lineNumber);
-                    }
-
                     pos += match.Length;
                     lineOffset += match.Length;
-                    if (token is EOLToken or EmptyLineToken)
+                   
+                    if (token.value.Contains('\n'))
                     {
-                        lineNumber++;
+                        lineNumber += token.value.Count(t => t == '\n');
                         lineOffset = 0;
                         hasExpressionOnLine = false;
                     }
+
                     break;
                 }
             }
 
             if (token is null)
             {
-                if (currString.StartsWith('"'))
-                    TokenBase.BuildError($"cant find string quote", lineOffset, lineNumber);
-                if (currString.StartsWith("'"))
-                    TokenBase.BuildError($"cant find char quote", lineOffset, lineNumber);
-
+                Console.WriteLine(currString);
                 TokenBase.BuildError($"unknown error in program", lineOffset, lineNumber);
             }
             else
@@ -105,9 +109,10 @@ public static class Lexer
                 tokens.Add(token);
             }
         }
+        
         Validate(tokens);
         FillTable(tokens);
-
+        
         return tokens;
     }
 

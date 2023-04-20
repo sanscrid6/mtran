@@ -3,15 +3,14 @@ using PlusParser.Tokens.Tokens;
 
 namespace PlusParser.Tokens.LexickTokens;
 
-public class EOLTokenType: TokenTypeBase
+public class CommentTokenType: TokenTypeBase
 {
-    public EOLTokenType(): base(@";\s*\r?\n")
+    public CommentTokenType() : base(@"//.+\r?\n")
     {
-        
     }
 
     public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new EOLToken(match.Value, offset + match.Index, match.Length, lineNumber);
+        return new CommentToken(match.Value, offset + match.Index, match.Length, lineNumber);
     }
 }

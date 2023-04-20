@@ -20,8 +20,9 @@ public static class Parser
             acc.Add(new List<TokenBase>());
          }
 
-         if (curr is EOLToken || curr is ColonToken || curr is OpenCodeBlockToken)
+         if (curr.value.Contains('\n'))
          {
+            acc[^1].Add(curr);
             acc.Add(new List<TokenBase>());
          }
          else
@@ -34,7 +35,7 @@ public static class Parser
       
       s.ForEach(q =>
       {
-         if (q[0] is SpaceToken)
+         if (q.Count > 0 && q[0] is SpaceToken)
          {
             q.RemoveAt(0);
          }
@@ -48,8 +49,27 @@ public static class Parser
 
       for (int i = 0; i < s.Count; i++)
       {
-         // s[i].Print();
-         // Console.WriteLine("===========================================================================");
+         //s[i].Print();
+         //Console.WriteLine("===========================================================================");
+
+         var isFunctionDeclaration = s[i].Count > 0 && s[i][0] is VoidToken or IntToken && 
+                                     s[i].Find(t => t is OpenParamsToken) != null && 
+                                     s[i].Find(t => t is OpenCodeBlockToken) != null || 
+                                     s.Count < i + 1 && s[i+1].Find(t => t is OpenCodeBlockToken) != null;
+         
+         if (s[i].Find(t => t is IfToken or ElseToken or ForToken or WhileToken or SwitchToken or IncludeToken or CaseToken) == null &&
+             !isFunctionDeclaration &&
+             !(s[i].Count == 1 && s[i][0] is EmptyLineToken) && 
+             !s[i].All(t => t is SpaceToken or CloseCodeBlockToken or OpenCodeBlockToken) &&  
+             !(s[i].Count == 1 && s[i][0] is CommentToken)
+            )
+         {
+            if (s[i].Find(t => t is EOLToken) == null)
+            {
+               TokenBase.BuildError($"expected semicolon", s[i][s[i].Count - 1].start, s[i][s[i].Count - 1].lineNumber);
+            }
+         }
+
          if (s[i].Find(t => t is CloseCodeBlockToken) != null)
          {
             var count = s[i].Count(t => t is CloseCodeBlockToken);
@@ -89,8 +109,6 @@ public static class Parser
          {
             BuildAssign(s[i], curr);
          }
-
-         
       }
       
       _ast.Print();

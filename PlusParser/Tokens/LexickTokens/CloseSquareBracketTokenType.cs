@@ -3,15 +3,15 @@ using PlusParser.Tokens.Tokens;
 
 namespace PlusParser.Tokens.LexickTokens;
 
-public class EOLTokenType: TokenTypeBase
+public class CloseSquareBracketTokenType: TokenTypeBase
 {
-    public EOLTokenType(): base(@";\s*\r?\n")
+    public CloseSquareBracketTokenType() : base(@"\]")
     {
-        
     }
 
     public override TokenBase CreateToken(Match match, int offset, int lineNumber)
     {
-        return new EOLToken(match.Value, offset + match.Index, match.Length, lineNumber);
+        return new CloseSquareBracketToken(match.Value, offset + match.Index, match.Length, lineNumber);
+
     }
 }

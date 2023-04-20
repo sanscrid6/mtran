@@ -5,7 +5,7 @@ namespace PlusParser.Tokens.LexickTokens;
 
 public class OperatorTokenType: TokenTypeBase
 {
-    public OperatorTokenType() : base(@"(\+=)|^(\+\+)")
+    public OperatorTokenType() : base(@"(\+=)|^(\+\+)|^(--)")
     {
     }
 

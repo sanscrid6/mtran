@@ -13,4 +13,9 @@ public abstract class TokenTypeBase
     {
         regex = new Regex("^"+regular);
     }
+    
+    public TokenTypeBase(string regular, RegexOptions options)
+    {
+        regex = new Regex("^"+regular, options);
+    }
 }

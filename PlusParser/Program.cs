@@ -6,8 +6,8 @@ class Program
     {
         // try
         // {
-            string[] lines = File.ReadAllLines(@"D:\lab\mtran\PlusParser\program.txt").ToArray();
-            var tokens = Lexer.Parse(String.Join("\n", lines));
+            var lines = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
+            var tokens = Lexer.Parse(lines);
             Parser.BuildAST(tokens);
            
             var columnWidth = 20;
