@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "7BWquT7JnWx1us5Hb30ZFqkKSTHOQ1QCZjS1apoKlyUqkxkJrZmUf98gZicSXx1+bqjWUIUVcwmuZeWRaAQuTg==",
+  "dgSpecHash": "tnNbPAyFC4pi8rnAbsy7MGSktW3ifHVARzIZxd6VNogAwTyAcAnJvIFBk+DCNve3FZdXntShq/JLyfEhkj8nCg==",
   "success": true,
   "projectFilePath": "D:\\lab\\mtran\\PlusParser\\PlusParser.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\sansc\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
+    "C:\\Users\\sansc\\.nuget\\packages\\sly\\2.9.4.6\\sly.2.9.4.6.nupkg.sha512",
+    "C:\\Users\\sansc\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",
+    "C:\\Users\\sansc\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\sansc\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\sansc\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512"
+  ],
   "logs": []
 }

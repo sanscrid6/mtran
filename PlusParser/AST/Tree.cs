@@ -1,4 +1,34 @@
+using PlusParser.Tokens.Tokens;
+
 namespace PlusParser.AST;
+
+interface INode
+{
+    
+}
+
+
+public class DefaultNode: INode
+{
+    public TokenBase value;
+
+    public override string ToString()
+    {
+        return value.ToString();
+    }
+}
+
+public class ComplexNode: INode
+{
+    public DefaultNode op;
+    public DefaultNode head;
+    public DefaultNode body;
+    
+    public override string ToString()
+    {
+        return op.ToString();
+    }
+}
 
 
 public class Node<T>

@@ -6,9 +6,12 @@ class Program
     {
         // try
         // {
+        //System.Diagnostics.Process.Start(@"D:\lab\mtran\PlusParser\test.cs");
             var lines = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
             var tokens = Lexer.Parse(lines);
             Parser.BuildAST(tokens);
+            
+            
            
             var columnWidth = 20;
             Console.WriteLine($"{"Variable".PadRight(columnWidth)} {"Type".PadRight(columnWidth)}");

@@ -1,6 +1,4 @@
-using System.Runtime.InteropServices;
 using PlusParser.AST;
-using PlusParser.Tokens.LexickTokens;
 using PlusParser.Tokens.Tokens;
 
 namespace PlusParser;
@@ -20,14 +18,11 @@ public static class Parser
             acc.Add(new List<TokenBase>());
          }
 
+         acc[^1].Add(curr);
+
          if (curr.value.Contains('\n'))
          {
-            acc[^1].Add(curr);
             acc.Add(new List<TokenBase>());
-         }
-         else
-         {
-            acc[^1].Add(curr);
          }
          
          return acc;
@@ -44,6 +39,11 @@ public static class Parser
       if (tokens.Count(t => t is OpenCodeBlockToken) != tokens.Count(t => t is CloseCodeBlockToken))
       {
          TokenBase.BuildError("missing }");
+      }
+      
+      if (tokens.Count(t => t is OpenParamsToken) != tokens.Count(t => t is CloseParamsToken))
+      {
+         TokenBase.BuildError("missing )");
       }
 
 
@@ -70,7 +70,7 @@ public static class Parser
             }
          }
 
-         if (s[i].Find(t => t is CloseCodeBlockToken) != null)
+         /*if (s[i].Find(t => t is CloseCodeBlockToken) != null)
          {
             var count = s[i].Count(t => t is CloseCodeBlockToken);
             for (int j = 0; j < count; j++)
@@ -84,11 +84,12 @@ public static class Parser
             var start = s[i].FindIndex(t => t is CoutToken || t is CinToken);
             BuildCoutOrCin(s[i].Skip(start).Take(s[i].Count).ToList(), curr);
          }
-         else if (s[i][0] is IntToken && s[i][2] is VariableToken && s[i][3] is OpenParamsToken) // is function
+         // is function
+         else if (s[i].Count > 0 && s[i][0] is IntToken or VoidToken && s[i][2] is VariableToken && s[i][3] is OpenParamsToken) 
          {
             curr = curr.AddChildren(s[i][2]);
          }
-         else if (s[i][0] is SwitchToken)
+         else if (s[i].Count > 0 && s[i][0] is SwitchToken)
          {
             curr = BuildSwitch(s[i], curr);
          }
@@ -96,7 +97,7 @@ public static class Parser
          {
             curr = BuildCase(s[i], curr);
          }
-         else if (s[i][0] is BreakToken)
+         else if (s[i].Count > 0 && s[i][0] is BreakToken)
          {
             curr = curr.GetPrev();
             curr = curr.GetPrev();
@@ -105,13 +106,21 @@ public static class Parser
          {
             curr = BuildFor(s[i], curr);
          } 
-         else if (s[i][0] is VariableToken || s[i][0] is StringToken || s[i][0] is IntToken || s[i][0] is CharToken || s[i][0] is FloatToken )
+         else if (s[i].Count > 0 && (s[i][0] is VariableToken || s[i][0] is StringToken || s[i][0] is IntToken || s[i][0] is CharToken || s[i][0] is FloatToken ))
          {
             BuildAssign(s[i], curr);
-         }
+         } 
+         else if (s[i].Find(t => t is WhileToken) != null)
+         {
+            curr = BuildWhile(s[i], curr);
+         } 
+         else if (s[i].Find(t => t is IfToken) != null)
+         {
+            curr = BuildIf(s[i], curr);
+         }*/
       }
       
-      _ast.Print();
+      //_ast.Print();
    }
 
    private static Node<TokenBase> BuildFor(List<TokenBase> tokens, Node<TokenBase> curr)
@@ -140,34 +149,87 @@ public static class Parser
    private static void BuildAssign(List<TokenBase> tokens, Node<TokenBase> curr)
    {
       var variable = tokens.FindIndex(t => t is VariableToken);
-      var literal = tokens.FindIndex(variable+1, t => t.IsLiteral() || t is VariableToken);
-      var assign = tokens.Find(t => t is IOperator);
-      if (assign == null) 
+      //var literal = tokens.FindIndex(variable+1, t => t.IsLiteral() || t is VariableToken);
+      var assign = tokens.FindIndex(t => t is IOperator);
+      
+      if (assign == -1) 
          return;
       
-      curr = curr.AddChildren(assign);
+      curr = curr.AddChildren(tokens[assign]);
       if(variable != -1)
          curr.AddChildren(tokens[variable]);
-      if(literal != -1)
-         curr.AddChildren(tokens[literal]);
+      
+      var q = tokens.Skip(assign).Where(t => t is not SpaceToken).ToList();
+
+      BuildExpression(q, curr);
+   }
+
+   private static Node<TokenBase> BuildIf(List<TokenBase> tokens, Node<TokenBase> curr)
+   {
+      curr = curr.AddChildren(tokens.Find(t => t is WhileToken));
+      
+      var start = tokens.FindIndex(t => t is OpenParamsToken);
+      var end = tokens.FindIndex(t => t is CloseParamsToken);
+
+      var head = tokens.Skip(start).Take(end - start).ToList();
+
+      BuildBooleanExpression(head, curr);
+      return curr;
+   }
+
+   private static Node<TokenBase> BuildWhile(List<TokenBase> tokens, Node<TokenBase> curr)
+   {
+      curr = curr.AddChildren(tokens.Find(t => t is WhileToken));
+      
+      var start = tokens.FindIndex(t => t is OpenParamsToken);
+      var end = tokens.FindIndex(t => t is CloseParamsToken);
+
+      var head = tokens.Skip(start).Take(end - start).ToList();
+
+      BuildBooleanExpression(head, curr);
+      return curr;
+   }
+
+
+   private static void BuildClause(List<TokenBase> tokens, Node<TokenBase> curr)
+   {
+      
    }
 
    private static void BuildExpression(List<TokenBase> tokens, Node<TokenBase> curr)
    {
-      if (tokens.Count == 1)
+      var variables = new Stack<TokenBase>();
+      var operators = new Stack<TokenBase>();
+      var priority = new Dictionary<string, int>
       {
-         curr.AddChildren(tokens[0]);
-         return;
+         {"+", 1},
+         {"/", 2},
+         {"]", 3}
+      };
+      var tokensRaw = tokens.Where(t => t is not SpaceToken).ToList();
+      tokensRaw.ForEach(t => Console.WriteLine(t.GetType()));
+      Console.WriteLine("=======================================================");
+      
+      for (int i = 0; i < tokensRaw.Count; i++)
+      {
+         if (tokens[i] is VariableToken or FloatLiteralToken or IntLiteralToken or CharLiteralToken or StringLiteralToken)
+         {
+            variables.Push(tokens[i]);
+         }
+
+         if (tokens[i] is CloseSquareBracketToken or ArifmeticToken)
+         {
+            if (priority[tokens[i].value] < priority[operators.Peek().value])
+            {
+            }
+         }
       }
 
-      var operands = tokens.FindAll(t => t is VariableToken || t.IsLiteral())!;
-      var binaryOperator = tokens.Find(t => t is IOperator)!;
-      
-      curr = curr.AddChildren(binaryOperator);
-      
-      curr.AddChildren(operands[0]);
-      if(operands.Count > 1)
-         curr.AddChildren(operands[1]);
+
+      while (variables.Count != 0)
+      {
+         curr.AddChildren(variables.Pop());
+      }
    }
 
    private static void BuildCoutOrCin(List<TokenBase> tokens, Node<TokenBase> curr)
@@ -177,10 +239,8 @@ public static class Parser
          if (tokens[i] is VariableToken)
          {
             var streamIndex = tokens.Skip(i).ToList().FindFirstIndex(t => t is StreamOperatorToken);
-            var q = tokens.Skip(i).ToList();
             var expressionTokens = tokens.Skip(i).Take(streamIndex != -1 ? streamIndex: tokens.Count).ToList();
             BuildExpression(expressionTokens.Where(t => !(t is SpaceToken)).ToList(), curr);
-            //curr = curr.GetPrev();
             i = streamIndex != -1 ? streamIndex + i: tokens.Count;
             i = Math.Clamp(i, 0, tokens.Count);
             i--;

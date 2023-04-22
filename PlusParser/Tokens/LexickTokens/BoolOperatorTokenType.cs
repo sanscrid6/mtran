@@ -5,7 +5,7 @@ namespace PlusParser.Tokens.LexickTokens;
 
 public class BoolOperatorTokenType: TokenTypeBase
 {
-    public BoolOperatorTokenType() : base(@"<=|^<|^>")
+    public BoolOperatorTokenType() : base(@"<=|^>=|^<|^>")
     {
     }
 

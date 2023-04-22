@@ -112,7 +112,7 @@ public static class Lexer
         
         Validate(tokens);
         FillTable(tokens);
-        
+        //tokens.ForEach(t => Console.WriteLine(t.GetType()));
         return tokens;
     }
 
