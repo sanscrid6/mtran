@@ -1,8 +1,13 @@
 namespace PlusParser.AST.TreeTokens;
 
-public class WhileToken: BaseNode
+public class WhileNode: BaseNode
 {
-    public BaseNode cond;
+    public readonly BaseNode Cond;
+    public readonly BaseNode Body;
 
-    public BaseNode body;
+    public WhileNode(BaseNode cond, BaseNode body)
+    {
+        this.Cond = cond;
+        this.Body = body;
+    }
 }

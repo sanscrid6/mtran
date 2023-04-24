@@ -2,9 +2,17 @@ namespace PlusParser.AST.TreeTokens;
 
 public class ForNode: BaseNode
 {
-    public BaseNode first;
-    public BaseNode second;
-    public BaseNode third;
+    public readonly BaseNode Assign;
+    public readonly ExpressionNode Condition;
+    public readonly UnaryOperationNode Increment;
 
-    public BaseNode body;
+    public readonly BaseNode Body;
+
+    public ForNode(BaseNode assign, ExpressionNode condition, UnaryOperationNode increment, BaseNode body)
+    {
+        Assign = assign;
+        Condition = condition;
+        Increment = increment;
+        Body = body;
+    }
 }

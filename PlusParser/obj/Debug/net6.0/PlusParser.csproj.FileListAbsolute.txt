@@ -28,3 +28,7 @@ D:\lab\mtran\PlusParser\obj\Debug\net6.0\refint\PlusParser.dll
 D:\lab\mtran\PlusParser\obj\Debug\net6.0\PlusParser.pdb
 D:\lab\mtran\PlusParser\obj\Debug\net6.0\PlusParser.genruntimeconfig.cache
 D:\lab\mtran\PlusParser\obj\Debug\net6.0\ref\PlusParser.dll
+D:\lab\mtran\PlusParser\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\lab\mtran\PlusParser\bin\Debug\net6.0\sly.dll
+D:\lab\mtran\PlusParser\bin\Debug\net6.0\System.Collections.Immutable.dll
+D:\lab\mtran\PlusParser\obj\Debug\net6.0\PlusParser.csproj.CopyComplete
