@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Runtime.InteropServices;
+using PlusParser.AST.TreeTokens;
 
 namespace PlusParser;
 
@@ -12,8 +13,22 @@ public static class Extensions
             Console.WriteLine(o);            
         }
     }
-    
-    
+
+
+    public static string DumpList<T>(this List<T> list, int level) where T : BaseNode
+    {
+        return String.Join("\n", list.Select((l, index) => l.Dump(level, index == 0)));
+    }
+
+
+    public static T If<T>(Func<bool> predicate, T trueCond, T falseCond)
+    {
+        if (predicate()) return trueCond;
+
+        return falseCond;
+    }
+
+
     public static List<List<T>> Split<T>(this List<T> collection, Predicate<T> predicate)
     {
         var result = new List<List<T>>();

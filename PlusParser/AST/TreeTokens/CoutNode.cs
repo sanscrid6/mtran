@@ -8,4 +8,9 @@ public class CoutNode: BaseNode
     {
         Out = nodes;
     }
+
+    public override string Dump(int level, bool isNode = false)
+    {
+        return (!isNode ? DrawLevel(level) : DrawNode(level)) + "cout:\n" + Out.DumpList(level + 1);
+    }
 }

@@ -60,14 +60,14 @@ public enum ExpressionToken
     [Lexeme("==")]
     EQ = 20,
     
-    [Lexeme("<")]
-    LT = 21,
-    
     [Lexeme("<=")]
-    LTE = 22,
+    LTE = 21,
     
     [Lexeme(">=")]
-    GTE = 23,
+    GTE = 22,
+    
+    [Lexeme("<")]
+    LT = 23,
     
     [Lexeme(">")]
     GT = 24,

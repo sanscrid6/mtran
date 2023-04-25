@@ -8,14 +8,9 @@ namespace PlusParser.AST;
 
 public class MyParser
 {
-    private Type GetType(Token<ExpressionToken> type, bool isArr = false)
+    private Type GetType(Token<ExpressionToken> type)
     {
         var t = Type.Int;
-
-        if (isArr)
-        {
-            return Type.IntArr;
-        }
 
         switch (type.TokenID)
         {
@@ -49,10 +44,11 @@ public class MyParser
         return t;
     }
 
-    [Production("statement : funcdecl")]
-    public BaseNode StatementSequence(BaseNode sequence)
+    [Production("program : funcdecl+")]
+    public BaseNode StatementSequence(List<BaseNode> sequence)
     {
-        return sequence;
+        return new EntryNode(sequence.Cast<FunctionDefinitionNode>().First(f => f.Name == "main"),
+                                sequence.Cast<FunctionDefinitionNode>().ToList());
     }
 
     [Production("block: OPENBLOCK [d] line* CLOSEBLOCK [d]")]
@@ -70,7 +66,7 @@ public class MyParser
     [Production("return: RETURN [d] expression ?")]
     public BaseNode Return(ValueOption<BaseNode> expr)
     {
-        return new ReturnNode(expr.Match((e) => e, () => null) as ExpressionNode);
+        return new ReturnNode(expr.Match((e) => e, () => null));
     }
     
     [Production("cin: CIN [d] STREAMIN [d] var")]
@@ -82,7 +78,7 @@ public class MyParser
     [Production("for: FOR [d] LPAREN [d] vardecl SEMICOLON [d] expression SEMICOLON [d] unary RPAREN [d] block")]
     public BaseNode For(BaseNode assign, BaseNode expr, BaseNode incr, BaseNode block)
     {
-        return new ForNode(assign, expr as ExpressionNode, incr as UnaryOperationNode, block);
+        return new ForNode(assign, expr as ExpressionNode, incr as UnaryOperationNode, block as BodyNode);
     }
     
     [Production("if: IF [d] LPAREN [d] expression RPAREN [d] [block | line]")]
@@ -157,6 +153,7 @@ public class MyParser
     [Production("line: cin (SEMICOLON [d])?")]
     [Production("line: return (SEMICOLON [d])?")]
     [Production("line: funccall (SEMICOLON [d])?")]
+    [Production("line: arrdecl (SEMICOLON [d])?")]
     public BaseNode Line(BaseNode sequence, ValueOption<Group<ExpressionToken, BaseNode>> option)
     {
         if (option.IsNone)
@@ -180,9 +177,9 @@ public class MyParser
             throw new Exception("cant find [");
         }
 
-        var t = GetType(type, !lsquare.IsEmpty);
+        var t = GetType(type);
 
-        return new ArgNode(name.Value, t);
+        return new ArgNode(t, name.Value, !lsquare.IsEmpty);
     }
 
     [Production("funcdecl: [INT | FLOAT | STRING | CHAR | VOID] VARIABLE LPAREN [d] arg* RPAREN [d] block")]
@@ -190,14 +187,61 @@ public class MyParser
     {
         var t = GetType(type);
 
-        return new FunctionDefinitionNode(name.Value, args.Cast<ArgNode>().ToList(), t, block);
+        return new FunctionDefinitionNode(name.Value, args.Cast<ArgNode>().ToList(), t, block as BodyNode); 
     }
-
-    [Production("vardecl: [INT | FLOAT | STRING | CHAR] VARIABLE ASSIGN [d] expression")]
-    public BaseNode TypeDecl(Token<ExpressionToken> type, Token<ExpressionToken> name, BaseNode expr)
+    
+    [Production("arrdecl: [INT | FLOAT | STRING | CHAR] VARIABLE LSQUARE [d] RSQUARE [d] ASSIGN [d] OPENBLOCK [d] arrinit+ CLOSEBLOCK [d] ")]
+    public BaseNode ArrDecl(Token<ExpressionToken> type, Token<ExpressionToken> name, List<BaseNode> init)
     {
         var t = GetType(type);
-        return new VariableDeclarationNode(name.Value, t, expr as ExpressionNode);
+        
+        return new VariableDeclarationNode(name.Value, t, new ArrInitNode<BaseNode>(init), true);
+    }
+    
+    [Production("arrinit: [INT_LITERAL | FLOAT_LITERAL | CHAR_LITERAL] COMA ? ")]
+    public BaseNode ArrInit(Token<ExpressionToken> type, Token<ExpressionToken> coma)
+    {
+        switch (type.TokenID)
+        {
+            case ExpressionToken.INT_LITERAL:
+                return new IntConstantNode(type.IntValue);
+            case ExpressionToken.CHAR_LITERAL:
+                return new CharConstantNode(type.CharValue);
+            case ExpressionToken.FLOAT_LITERAL:
+                return new FloatConstantNode((float) type.DoubleValue);
+        }
+
+        throw new Exception($"cant find type ${type.TokenID}");
+    }
+
+    [Production("vardecl: [INT | FLOAT | STRING | CHAR] VARIABLE (ASSIGN [d] expression) ?")]
+    //[Production("vardecl: [INT | FLOAT | STRING | CHAR] VARIABLE (ASSIGN [d] funccall) ?")]
+    public BaseNode TypeDecl(Token<ExpressionToken> type, Token<ExpressionToken> name,ValueOption<Group<ExpressionToken, BaseNode>> expr)
+    {
+        var t = GetType(type);
+
+        if (expr.IsSome)
+        {
+            var v = expr.Match(v => v, () => null);
+            return new VariableDeclarationNode(name.Value, t, v.ItemsByName["expression"].Value);
+        }
+        
+        return new VariableDeclarationNode(name.Value, t, null);
+    }
+    
+    
+    [Production("vardecl: [INT | FLOAT | STRING | CHAR] VARIABLE (ASSIGN [d] funccall) ?")]
+    public BaseNode TypeDeclFunc(Token<ExpressionToken> type, Token<ExpressionToken> name,ValueOption<Group<ExpressionToken, BaseNode>> expr)
+    {
+        var t = GetType(type);
+
+        if (expr.IsSome)
+        {
+            var v = expr.Match(v => v, () => null);
+            return new VariableDeclarationNode(name.Value, t, v.ItemsByName["funccall"].Value);
+        }
+        
+        return new VariableDeclarationNode(name.Value, t, null);
     }
 
 
@@ -221,7 +265,7 @@ public class MyParser
     }
     
     [Production("assign: VARIABLE ASSIGN [d] expression")]
-    public BaseNode AssignStmt(Token<ExpressionToken> variable, ExpressionNode value)
+    public BaseNode AssignStmt(Token<ExpressionToken> variable, BaseNode value)
     {
         var assign = new AssignStatement(variable.StringWithoutQuotes, value);
         return assign;
@@ -243,7 +287,7 @@ public class MyParser
     [Production("primary: STRING_LITERAL")]
     public BaseNode StringLiteral(Token<ExpressionToken> token)
     {
-        return new StringConstantNode(token.Value);
+        return new StringConstantNode(token.StringWithoutQuotes);
     }
     
     [Production("primary: CHAR_LITERAL")]

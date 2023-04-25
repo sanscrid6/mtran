@@ -28,8 +28,10 @@ class Program
 
         if (node is SyntaxLeaf<ExpressionToken> sl)
         {
-            Console.WriteLine($"{new string(' ', depth)}{sl.Token.Value}");
-
+            if (!String.IsNullOrWhiteSpace(sl.Token.Value))
+            {
+                Console.WriteLine($"{new string(' ', depth)}{sl.Token.Value}");
+            }
         }
     }
 
@@ -40,88 +42,33 @@ class Program
         MyParser myParserDefinition = new MyParser();
         var parserBuilder = new ParserBuilder<ExpressionToken, BaseNode>();
 
-        var parserResult = parserBuilder.BuildParser(myParserDefinition, ParserType.EBNF_LL_RECURSIVE_DESCENT, "statement");
-      
+        var parserResult = parserBuilder.BuildParser(myParserDefinition,
+                                                     ParserType.EBNF_LL_RECURSIVE_DESCENT, 
+                                                    "program");
         if (parserResult.IsOk) {
             parser = parserResult.Result;
+            //parser.SyntaxParseCallback = node => Console.WriteLine(node.Dump(" "));
         }
         else {
             foreach(var error in parserResult.Errors) {
                 Console.WriteLine($"{error.Code} : {error.Message}");
             }    
         }
-
-        string expression = @"
-#include <iostream>
-using namespace std;
-
-int main(){
- float firstNum = 0.00;
-    string text = ""sum is"";
-        int sum = qq;
-cout << ""Enter your operater: +, -, *, /: \n"";
-
-    for (int i = 0; i < 5; i++){
-        sum = sum + i;
-    }
-
-    if(a < 2){
-        count++;
-    }
-
- while(a < 2 || b > 3){
-        count++;
-    }
-    
-quickSort(arr, start, p - 1);
-     switch(setOperator) {
-        case '+':
-            cout << ""The answer is: "" << firstNum + secondNum;
-        break;
-case '+':
-            cout << ""The answer is: "" << firstNum + secondNum;
-        break;
-case '+':
-            cout << ""The answer is: "" << firstNum + secondNum;
-        break;
         
-    }
+        var program = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
 
-     return ;   
-    }
-";
-
-        var l = parser.Lexer.Tokenize(expression);
-        Console.WriteLine(l.Tokens.Count);
-        foreach (var t in l.Tokens) 
-        {
-            Console.WriteLine(t.TokenID);
-        }
-
-        var r = parser?.Parse(expression);
+        var r = parser?.Parse(program);
         
-        //Console.WriteLine((r.Result as VariableDeclarationNode).Value);
-        //var s = r.SyntaxTree.Dump("  ");
-        //Console.WriteLine(s);
-        
-        PrintTree(r.SyntaxTree);
+        //PrintTree(r.SyntaxTree);
         
         if (r is {IsError: false})
         {
-            Console.WriteLine($"result of {expression}  is {r.Result}");
+            Console.WriteLine($"{r.Result.Dump(0)}");
         }
         else
         {
-            if (r?.Errors != null && r.Errors.Any())
-            {
-                // display errors
-                r.Errors.ForEach(error => Console.WriteLine());
-            }
+            r?.Errors?.ForEach(error => Console.WriteLine());
         }
-        
-        
-        
-        
         
         // try
         // {

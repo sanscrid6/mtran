@@ -6,10 +6,24 @@ public class ArgNode: BaseNode
 {
     public readonly Type Type;
     public readonly string Name;
+    public readonly bool IsArray;
 
-    public ArgNode(string name, Type type)
+    public ArgNode(Type type, string name, bool isArray)
     {
-        Name = name;
         Type = type;
+        Name = name;
+        IsArray = isArray;
+    }
+    public override string Dump(int level, bool isNode = true)
+    {
+        var prefix = isNode ? DrawNode(level) : DrawLevel(level);
+        var value = $"{prefix}{Type.ToString().ToLower()} {Name}";
+        
+        if (IsArray)
+        {
+            value += "[]";
+        }
+
+        return value;
     }
 }

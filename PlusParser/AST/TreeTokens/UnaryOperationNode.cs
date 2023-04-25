@@ -8,6 +8,12 @@ public enum UnaryOperation
 
 public class UnaryOperationNode: BaseNode
 {
+    public static readonly Dictionary<UnaryOperation, string> EnumToSymbol = new()
+    {
+        {UnaryOperation.Dec, "--"},
+        {UnaryOperation.Inc, "++"}
+    };
+    
     public readonly BaseNode Value;
     public readonly UnaryOperation Operation;
 
@@ -15,5 +21,15 @@ public class UnaryOperationNode: BaseNode
     {
         Value = node;
         Operation = op;
+    }
+
+    public override string Dump(int level, bool isNode = false)
+    {
+        //return DrawLevel(level) + $"{EnumToSymbol[Operation]}\n" + Value.Dump(level + 1);
+        
+        return (!isNode ? DrawLevel(level) : DrawNode(level)) + "operation:\n" + 
+               DrawNode(level + 1) + $"{EnumToSymbol[Operation]}\n" + 
+               DrawLevel(level + 1) + "values:" + "\n" +
+               Value.Dump(level + 2, true);
     }
 }

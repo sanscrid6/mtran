@@ -10,4 +10,13 @@ public class SwitchNode: BaseNode
         SwitchValue = switchValue;
         Cases = cases;
     }
+
+    public override string Dump(int level, bool isNode = false)
+    {
+        return (!isNode ? DrawLevel(level) : DrawNode(level)) + "switch:\n" +
+               DrawLevel(level + 1) + "name:\n" +
+               SwitchValue.Dump(level + 2, true) + "\n" +
+               DrawLevel(level + 1) + "cases:\n" +
+               Cases.DumpList(level + 2);
+    }
 }

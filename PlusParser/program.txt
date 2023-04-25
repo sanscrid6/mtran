@@ -23,7 +23,9 @@ int partition(int arr[], int start, int end)
             j--;
         }
         if (i < pivotIndex && j > pivotIndex) {
-            swap(arr[i++], arr[j--]);   
+            swap(arr[i], arr[j]);
+             i++;
+             j--;   
         }
     }
     return pivotIndex;

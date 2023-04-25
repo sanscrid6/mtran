@@ -7,7 +7,6 @@ public enum Type
     String,
     Char,
     Void,
-    IntArr,
 }
 
 public class VariableNode: BaseNode
@@ -17,5 +16,15 @@ public class VariableNode: BaseNode
     public VariableNode(string name)
     {
         Name = name;
+    }
+
+    public override string Dump(int level, bool isNode = false)
+    {
+        if (isNode)
+        {
+            return DrawNode(level) + Name;
+        }
+
+        return DrawLevel(level) + Name; 
     }
 }

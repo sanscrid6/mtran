@@ -8,4 +8,19 @@ public class IntConstantNode: BaseNode
     {
         Value = v;
     }
+
+    public override string Dump(int level, bool isNode = false)
+    {
+        if (isNode)
+        {
+            return DrawNode(level) + $"{Value}";
+        }
+        
+        return DrawLevel(level) + $"{Value}";
+    }
+
+    public override string ToString()
+    {
+        return $"{Value}";
+    }
 }
