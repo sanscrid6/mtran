@@ -23,6 +23,14 @@ public class UnaryOperationNode: BaseNode
         Operation = op;
     }
 
+    public override void Analyze()
+    {
+        if (Value is LiteralNode and not FloatConstantNode and not IntConstantNode)
+        {
+            throw new Exception("unary operator can be apply only to int ot float");
+        }
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         //return DrawLevel(level) + $"{EnumToSymbol[Operation]}\n" + Value.Dump(level + 1);

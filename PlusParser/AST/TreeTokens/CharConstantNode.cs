@@ -1,6 +1,6 @@
 namespace PlusParser.AST.TreeTokens;
 
-public class CharConstantNode: BaseNode
+public class CharConstantNode: LiteralNode
 {
     public readonly char Value;
 

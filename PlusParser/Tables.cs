@@ -2,7 +2,7 @@ namespace PlusParser;
 
 public class Arg
 {
-    public string type;
+    public AST.TreeTokens.Type type;
     public bool isArr;
     public string name;
 }
@@ -16,4 +16,5 @@ public class FunctionDefinition
 public static class Tables
 {
     public static List<FunctionDefinition> functions = new();
+    public static Dictionary<string, Arg> variables = new();
 }

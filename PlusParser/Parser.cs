@@ -1,5 +1,8 @@
 using PlusParser.AST;
+using PlusParser.AST.TreeTokens;
 using PlusParser.Tokens.Tokens;
+using sly.parser;
+using sly.parser.generator;
 
 namespace PlusParser;
 
@@ -9,7 +12,7 @@ public static class Parser
    
    public static void BuildAST(List<TokenBase> tokens)
    {
-      var curr = _ast.root;
+      /*var curr = _ast.root;
       
       var s = tokens.Aggregate(new List<List<TokenBase>>(), (acc, curr) =>
       {
@@ -52,23 +55,23 @@ public static class Parser
          //s[i].Print();
          //Console.WriteLine("===========================================================================");
 
-         var isFunctionDeclaration = s[i].Count > 0 && s[i][0] is VoidToken or IntToken && 
-                                     s[i].Find(t => t is OpenParamsToken) != null && 
-                                     s[i].Find(t => t is OpenCodeBlockToken) != null || 
-                                     s.Count < i + 1 && s[i+1].Find(t => t is OpenCodeBlockToken) != null;
-         
-         if (s[i].Find(t => t is IfToken or ElseToken or ForToken or WhileToken or SwitchToken or IncludeToken or CaseToken) == null &&
-             !isFunctionDeclaration &&
-             !(s[i].Count == 1 && s[i][0] is EmptyLineToken) && 
-             !s[i].All(t => t is SpaceToken or CloseCodeBlockToken or OpenCodeBlockToken) &&  
-             !(s[i].Count == 1 && s[i][0] is CommentToken)
-            )
-         {
-            if (s[i].Find(t => t is EOLToken) == null)
-            {
-               TokenBase.BuildError($"expected semicolon", s[i][s[i].Count - 1].start, s[i][s[i].Count - 1].lineNumber);
-            }
-         }
+         // var isFunctionDeclaration = s[i].Count > 0 && s[i][0] is VoidToken or IntToken && 
+         //                             s[i].Find(t => t is OpenParamsToken) != null && 
+         //                             s[i].Find(t => t is OpenCodeBlockToken) != null || 
+         //                             s.Count < i + 1 && s[i+1].Find(t => t is OpenCodeBlockToken) != null;
+         //
+         // if (s[i].Find(t => t is IfToken or ElseToken or ForToken or WhileToken or SwitchToken or IncludeToken or CaseToken) == null &&
+         //     !isFunctionDeclaration &&
+         //     !(s[i].Count == 1 && s[i][0] is EmptyLineToken) && 
+         //     !s[i].All(t => t is SpaceToken or CloseCodeBlockToken or OpenCodeBlockToken) &&  
+         //     !(s[i].Count == 1 && s[i][0] is CommentToken)
+         //    )
+         // {
+         //    if (s[i].Find(t => t is EOLToken) == null)
+         //    {
+         //       TokenBase.BuildError($"expected semicolon", s[i][s[i].Count - 1].start, s[i][s[i].Count - 1].lineNumber);
+         //    }
+         // }
 
          /*if (s[i].Find(t => t is CloseCodeBlockToken) != null)
          {
@@ -117,10 +120,43 @@ public static class Parser
          else if (s[i].Find(t => t is IfToken) != null)
          {
             curr = BuildIf(s[i], curr);
-         }*/
+         }
+      }*/
+      
+      TreeBuilder treeBuilderDefinition = new TreeBuilder();
+      var parserBuilder = new ParserBuilder<ExpressionToken, BaseNode>();
+
+      var parserResult = parserBuilder.BuildParser(treeBuilderDefinition,
+         ParserType.EBNF_LL_RECURSIVE_DESCENT, 
+         "program");
+         
+      var parser = parserResult.Result;
+      if (!parserResult.IsOk) {
+         foreach(var error in parserResult.Errors) {
+            Console.WriteLine($"{error.Code} : {error.Message}");
+         }
+      }
+
+      var program = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
+
+      var r = parser?.Parse(program);
+
+      if (r is {IsError: false})
+      {
+         if (r.Result == null)
+         {
+            Console.WriteLine("unknown error");
+            return;
+         }
+         
+         //Console.WriteLine($"{r.Result.Dump(0)}");
+         r.Result.Analyze();
+      }
+      else
+      {
+         r?.Errors?.ForEach(error => Console.WriteLine(error));
       }
       
-      //_ast.Print();
    }
 
    private static Node<TokenBase> BuildFor(List<TokenBase> tokens, Node<TokenBase> curr)
@@ -189,8 +225,7 @@ public static class Parser
       BuildBooleanExpression(head, curr);
       return curr;
    }
-
-
+   
    private static void BuildClause(List<TokenBase> tokens, Node<TokenBase> curr)
    {
       
@@ -208,7 +243,6 @@ public static class Parser
       };
       var tokensRaw = tokens.Where(t => t is not SpaceToken).ToList();
       tokensRaw.ForEach(t => Console.WriteLine(t.GetType()));
-      Console.WriteLine("=======================================================");
       
       for (int i = 0; i < tokensRaw.Count; i++)
       {

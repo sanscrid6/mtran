@@ -11,6 +11,11 @@ public class AssignStatement: BaseNode
         Value = val;
     }
 
+    public override void Analyze()
+    {
+        Value.Analyze();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + VariableName + "\n" + Value.Dump(level + 1);

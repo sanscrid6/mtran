@@ -7,6 +7,11 @@ public class BaseNode
             return $"{new string(' ', level * 4)}";
       }
 
+      public virtual void Analyze()
+      {
+            
+      }
+
       public static string DrawLevel(int level)
       {
             if (level > 0)

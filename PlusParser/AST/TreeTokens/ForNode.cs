@@ -16,6 +16,14 @@ public class ForNode: BaseNode
         Body = body;
     }
 
+    public override void Analyze()
+    {
+        Assign.Analyze();
+        Condition.Analyze();
+        Increment.Analyze();
+        Body.Analyze();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "for:\n" +

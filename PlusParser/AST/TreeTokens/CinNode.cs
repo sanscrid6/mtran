@@ -9,6 +9,11 @@ public class CinNode: BaseNode
         Value = value;
     }
 
+    public override void Analyze()
+    {
+        Value.Analyze();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "cin:\n" + 

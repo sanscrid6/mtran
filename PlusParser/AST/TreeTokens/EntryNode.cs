@@ -15,4 +15,9 @@ public class EntryNode: BaseNode
     {
         return Functions.DumpList(0);
     }
+
+    public override void Analyze()
+    {
+        Functions.ForEach(f => f.Analyze());
+    }
 }

@@ -14,6 +14,22 @@ public class ArgNode: BaseNode
         Name = name;
         IsArray = isArray;
     }
+
+    public override void Analyze()
+    {
+        if (Tables.variables.ContainsKey(Name))
+        {
+            Tables.variables.Remove(Name);
+        }
+        
+        Tables.variables.Add(Name, new Arg
+        {
+            name = Name,
+            isArr = IsArray,
+            type = Type
+        });
+    }
+
     public override string Dump(int level, bool isNode = true)
     {
         var prefix = isNode ? DrawNode(level) : DrawLevel(level);

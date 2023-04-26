@@ -6,7 +6,7 @@ using Type = PlusParser.AST.TreeTokens.Type;
 
 namespace PlusParser.AST;
 
-public class MyParser
+public class TreeBuilder
 {
     private Type GetType(Token<ExpressionToken> type)
     {
@@ -111,8 +111,13 @@ public class MyParser
         return new FunctionCallNode(var as VariableNode, args);
     }
     
-     
-    [Production("case: CASE [d] [CHAR_LITERAL | INT_LITERAL | FLOAT_LITERAL] COLON [d] line* BREAK [d] SEMICOLON [d]")]
+    [Production("break: BREAK [d]")]
+    public BaseNode Break()
+    {
+        return new BreakNode();
+    }
+    
+    [Production("case: CASE [d] [CHAR_LITERAL | INT_LITERAL | FLOAT_LITERAL] COLON [d] line* ")]
     public BaseNode Case(Token<ExpressionToken> type, List<BaseNode> lines)
     {
         BaseNode t = null;
@@ -154,6 +159,7 @@ public class MyParser
     [Production("line: return (SEMICOLON [d])?")]
     [Production("line: funccall (SEMICOLON [d])?")]
     [Production("line: arrdecl (SEMICOLON [d])?")]
+    [Production("line: break (SEMICOLON [d])?")]
     public BaseNode Line(BaseNode sequence, ValueOption<Group<ExpressionToken, BaseNode>> option)
     {
         if (option.IsNone)

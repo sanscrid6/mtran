@@ -11,6 +11,11 @@ public class SwitchNode: BaseNode
         Cases = cases;
     }
 
+    public override void Analyze()
+    {
+        Cases.ForEach(c => c.Analyze());
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "switch:\n" +

@@ -11,6 +11,12 @@ public class WhileNode: BaseNode
         Body = body;
     }
 
+    public override void Analyze()
+    {
+        Cond.Analyze();
+        Body.Analyze();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "while:\n" +

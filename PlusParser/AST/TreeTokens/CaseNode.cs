@@ -1,5 +1,3 @@
-using PlusParser.Tokens.Tokens;
-
 namespace PlusParser.AST.TreeTokens;
 
 public class CaseNode: BaseNode
@@ -13,10 +11,20 @@ public class CaseNode: BaseNode
         Body = body;
     }
 
+    public override void Analyze()
+    {
+        /*var breakNode = Body.Lines.Find(l => l is BreakNode);
+        if (breakNode == null)
+        {
+            throw new Exception("expected break statement in case");
+        }*/
+        Body.Analyze();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "case:\n" +
-               DrawLevel(level + 1) + "name:\n" +
+               DrawLevel(level + 1) + "constant:\n" +
                Literal.Dump(level + 2, true) + "\n" +
                DrawLevel(level + 1) + "body:\n" +
                Body.Dump(level + 2, true);

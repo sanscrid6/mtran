@@ -1,4 +1,5 @@
 using System.Reflection;
+using PlusParser.Tokens.Tokens;
 
 namespace PlusParser.AST.TreeTokens;
 
@@ -17,11 +18,52 @@ public class FunctionDefinitionNode: BaseNode
         ReturnType = returnType;
     }
 
+    public override void Analyze()
+    {
+        Args.ForEach(arg => arg.Analyze());
+        var returnNode = Body.Lines.Find(l => l is ReturnNode) as ReturnNode;
+        if (ReturnType == Type.Int)
+        {
+            if (returnNode == null)
+            {
+                throw new Exception("expected return statement in function body");
+            }
+            
+            if (returnNode.Value == null)
+            {
+                throw new Exception("expected value in return statement");
+            }
+
+            if (returnNode.Value is LiteralNode)
+            {
+                if (returnNode.Value is not IntConstantNode)
+                {
+                    throw new Exception("expected integer return type");
+                }
+            }
+        }
+        else if (ReturnType == Type.Void)
+        {
+            if (returnNode is {Value: { }})
+            {
+                throw new Exception("not expected value in return statement");
+            }
+        }
+
+        if (Body.Lines.Find(l => l is BreakNode) != null)
+        {
+            throw new Exception("not expected break statement in this context");
+        }
+        
+        Body.Analyze();
+    }
+
     public override string Dump(int level, bool isNode = true)
     {
         return
             $"function:\n" +
-            DrawNode(level + 1) + $"declaration: {ReturnType.ToString().ToLower()} {Name}\n" +
+            DrawLevel(level + 1) + $"name: {Name}\n" +
+            DrawLevel(level + 1) + $"return type: {ReturnType.ToString().ToLower()}\n" +
             DrawLevel(level + 1) + "args:\n" +
             (Args.Count > 0 ? $"{Args.DumpList(level + 2)}": $"{DrawNode(level + 2)}Empty") + "\n" +
             DrawLevel(level + 1) +"body:\n" +

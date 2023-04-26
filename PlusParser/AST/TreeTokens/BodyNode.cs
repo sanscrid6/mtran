@@ -11,6 +11,11 @@ public class BodyNode: BaseNode
         Lines = lines;
     }
 
+    public override void Analyze()
+    {
+        Lines.ForEach(l => l.Analyze());
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         var result = "";

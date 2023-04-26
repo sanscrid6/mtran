@@ -1,6 +1,6 @@
 namespace PlusParser.AST.TreeTokens;
 
-public class FloatConstantNode: BaseNode
+public class FloatConstantNode: LiteralNode
 {
     public readonly float Value;
 

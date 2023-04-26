@@ -11,6 +11,11 @@ public class FunctionCallNode: BaseNode
         Args = args;
     }
 
+    public override void Analyze()
+    {
+        Args.ForEach(arg => arg.Analyze());
+    }
+
 
     public override string Dump(int level, bool isNode = false)
     {
