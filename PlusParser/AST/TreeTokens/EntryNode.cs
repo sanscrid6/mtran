@@ -23,7 +23,14 @@ public class EntryNode: BaseNode
 
     public override object? Execute()
     {
-        Main.Execute();
+        try
+        {
+            Main.Execute();
+        }
+        catch (Exception e)
+        {
+           
+        }
         return null;
     }
 }

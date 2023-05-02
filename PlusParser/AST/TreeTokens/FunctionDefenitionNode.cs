@@ -80,9 +80,18 @@ public class FunctionDefinitionNode: BaseNode
             });
 
         }
-        var res = Body.Execute();
-        Tables.RemoveScope();
-        return res;
+
+        try
+        {
+            var res = Body.Execute();
+            Tables.RemoveScope();
+            return res;
+        }
+        catch (ReturnEx e)
+        {
+            Tables.RemoveScope();
+            return e.Value;
+        }
     }
 
     public override string Dump(int level, bool isNode = true)

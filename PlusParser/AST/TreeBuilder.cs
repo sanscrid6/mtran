@@ -75,19 +75,19 @@ public class TreeBuilder
         return new CinNode(expr as VariableNode);
     }
     
-    [Production("for: FOR [d] LPAREN [d] vardecl SEMICOLON [d] expression SEMICOLON [d] unary RPAREN [d] block")]
+    [Production("for: FOR [d] LPAREN [d] vardecl SEMICOLON [d] boolexpression SEMICOLON [d] unary RPAREN [d] block")]
     public BaseNode For(BaseNode assign, BaseNode expr, BaseNode incr, BaseNode block)
     {
         return new ForNode(assign, expr as ExpressionNode, incr as UnaryOperationNode, block as BodyNode);
     }
     
-    [Production("if: IF [d] LPAREN [d] expression RPAREN [d] [block | line]")]
+    [Production("if: IF [d] LPAREN [d] boolexpression RPAREN [d] [block | line]")]
     public BaseNode If(BaseNode cond, BaseNode body)
     {
         return new IfNode(cond, body);
     }
     
-    [Production("while: WHILE [d] LPAREN [d] expression RPAREN [d] block")]
+    [Production("while: WHILE [d] LPAREN [d] boolexpression RPAREN [d] block")]
     public BaseNode While(BaseNode cond, BaseNode body)
     {
         return new WhileNode(cond, body);
@@ -416,7 +416,7 @@ public class TreeBuilder
         return result!;
     }
     
-    [Production("expression: term [ AND | OR ] expression")]
+    [Production("boolexpression: expression [ AND | OR ] expression")]
     public BaseNode Logic(BaseNode left, Token<ExpressionToken> operatorToken, BaseNode right)
     {
         BaseNode result = null;
@@ -436,6 +436,12 @@ public class TreeBuilder
         }
 
         return result!;
+    }
+    
+    [Production("boolexpression: expression")]
+    public BaseNode Logic2(BaseNode left)
+    {
+        return left!;
     }
 
     [Production("expression: term")]

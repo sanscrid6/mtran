@@ -18,10 +18,32 @@ public class FunctionCallNode: BaseNode
 
     public override object? Execute()
     {
-        var args = Args.Select(arg => arg.Execute()).ToList();
         //args.Print();
         //Console.WriteLine(args.Count);
-        Tables.ExecuteFunction(Name.Name, args);
+        if (Name.Name == "swap")
+        {
+            var left = Args[0];
+            var right = Args[1];
+
+            var indexLeft = ((left as BinaryOperationNode).Right as VariableNode).Name;
+            var indexRight =  ((right as BinaryOperationNode).Right as VariableNode).Name;
+            
+            void Swap<T>(T[] array, int index1, int index2)
+            {
+                T temp = array[index1];
+                array[index1] = array[index2];
+                array[index2] = temp;
+            }
+            
+            Swap(Tables.GetValue("arr") as int[], (int)Tables.GetValue(indexLeft), (int)Tables.GetValue(indexRight));
+        }
+        else
+        {
+            var args = Args.Select(arg => arg.Execute()).ToList();
+
+            return Tables.ExecuteFunction(Name.Name, args);
+        }
+
         return null;
     }
 

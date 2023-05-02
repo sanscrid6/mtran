@@ -15,7 +15,6 @@ int partition(int arr[], int start, int end)
     // Sorting left and right parts of the pivot element
     int i = start;
     int j = end;
-    // err ?
     while (i < pivotIndex && j > pivotIndex) {
         while (arr[i] <= pivot) {
             i++;
@@ -35,8 +34,9 @@ int partition(int arr[], int start, int end)
 void quickSort(int arr[], int start, int end)
 {
     // base case
-    if (start >= end)
-        return;
+    if (start >= end){
+       return;
+    }
     // partitioning the array
     int p = partition(arr, start, end);
     // Sorting the left part

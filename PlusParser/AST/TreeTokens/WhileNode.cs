@@ -22,7 +22,15 @@ public class WhileNode: BaseNode
         Tables.AddScope("while");
         while ((bool) Cond.Execute())
         {
-            Body.Execute();
+            try
+            {
+                Body.Execute();
+            }
+            catch (ReturnEx e)
+            {
+                Tables.RemoveScope();
+                throw;
+            }
         }
         Tables.RemoveScope();
 

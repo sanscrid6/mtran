@@ -16,7 +16,16 @@ public class IfNode: BaseNode
         Tables.AddScope("if");
         if ((bool) Cond.Execute())
         {
-            Body.Execute();
+            try
+            {
+                Body.Execute();
+            }
+            catch (ReturnEx e)
+            {
+                Tables.RemoveScope();
+                throw;
+            }
+
         }
         Tables.RemoveScope();
         

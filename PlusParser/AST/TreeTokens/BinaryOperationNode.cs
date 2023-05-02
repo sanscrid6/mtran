@@ -105,11 +105,11 @@ public class BinaryOperationNode: ExpressionNode
         dynamic right = Right.Execute();
         
         
-        Console.WriteLine(Operation);
+        /*Console.WriteLine(Operation);
         if(left is not null)
         Console.WriteLine(left);
         if(right is not null)
-        Console.WriteLine(right);
+        Console.WriteLine(right);*/
 
         if (left is float)
             left = (float) left;

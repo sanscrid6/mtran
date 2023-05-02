@@ -2,6 +2,11 @@ using System.IO.Pipes;
 
 namespace PlusParser.AST.TreeTokens;
 
+public class ReturnEx : Exception
+{
+    public object? Value;
+}
+
 public class BodyNode: BaseNode
 {
     public readonly List<BaseNode> Lines;
@@ -18,10 +23,19 @@ public class BodyNode: BaseNode
 
     public override object? Execute()
     {
-        Lines.ForEach(l => l.Execute());
-        var returnNode = Lines.Find(l => l is ReturnNode);
-        
-        return returnNode?.Execute();
+        for (int i = 0; i < Lines.Count; i++)
+        {
+            if (Lines[i] is ReturnNode)
+            {
+                var ex = new ReturnEx();
+                ex.Value = Lines[i].Execute();
+                throw ex;
+            }
+
+            Lines[i].Execute();
+        }
+
+        return null;
     }
 
     public override string Dump(int level, bool isNode = false)

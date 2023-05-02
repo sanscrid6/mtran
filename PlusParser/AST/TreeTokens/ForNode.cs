@@ -32,7 +32,15 @@ public class ForNode: BaseNode
         Assign.Execute();
         while ((bool)Condition.Execute())
         {
-            Body.Execute();
+            try
+            {
+                Body.Execute();
+            }
+            catch (ReturnEx e)
+            {
+                Tables.RemoveScope();
+                throw;
+            }
             Increment.Execute();
         }
         Tables.RemoveScope();
