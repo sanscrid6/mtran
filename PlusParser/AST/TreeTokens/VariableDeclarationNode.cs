@@ -1,3 +1,5 @@
+using System.Formats.Asn1;
+
 namespace PlusParser.AST.TreeTokens;
 
 public class VariableDeclarationNode: BaseNode
@@ -17,12 +19,12 @@ public class VariableDeclarationNode: BaseNode
 
     public override void Analyze()
     {
-        if (Tables.variables.ContainsKey(Name))
+        if (Tables.variablesSemantic.ContainsKey(Name))
         {
-            Tables.variables.Remove(Name);
+            Tables.variablesSemantic.Remove(Name);
         }
         
-        Tables.variables.Add(Name, new Arg
+        Tables.variablesSemantic.Add(Name, new Arg
         {
             name = Name,
             type = Type,
@@ -81,6 +83,18 @@ public class VariableDeclarationNode: BaseNode
         }
         
         Value?.Analyze();
+    }
+
+    public override object? Execute()
+    {
+        Tables.AddVariable(Name, Value?.Execute(), new Arg
+        {
+            isArr = IsArray,
+            name = Name,
+            type = Type
+        });
+        
+        return null;
     }
 
     public VariableDeclarationNode(string name, Type type, BaseNode expr)

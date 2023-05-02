@@ -49,8 +49,8 @@ public class BinaryOperationNode: ExpressionNode
 
             if (Right is VariableNode variableNode)
             {
-                var arg = Tables.variables[variableNode.Name];
-                if (!Tables.variables[(Left as VariableNode).Name].isArr)
+                var arg = Tables.variablesSemantic[variableNode.Name];
+                if (!Tables.variablesSemantic[(Left as VariableNode).Name].isArr)
                 {
                     throw new Exception("expected array in [] operation");
                 }
@@ -71,8 +71,8 @@ public class BinaryOperationNode: ExpressionNode
 
             if (Left is VariableNode variableNode)
             {
-                var type = Tables.variables[variableNode.Name];
-                if (!type.isArr && type.type is not Type.Int or Type.Float)
+                var type = Tables.variablesSemantic[variableNode.Name];
+                if (!type.isArr && type.type is not Type.Int and not Type.Float)
                 {
                     throw new Exception("expected int or float variable in arifmetic expression");
                 }
@@ -97,5 +97,94 @@ public class BinaryOperationNode: ExpressionNode
                DrawLevel(level + 1) + "values:\n" +
                Left.Dump(level+2, true) + "\n" +
                Right.Dump(level+2);
+    }
+
+    public override object? Execute()
+    {
+        dynamic left = Left.Execute();
+        dynamic right = Right.Execute();
+        
+        
+        Console.WriteLine(Operation);
+        if(left is not null)
+        Console.WriteLine(left);
+        if(right is not null)
+        Console.WriteLine(right);
+
+        if (left is float)
+            left = (float) left;
+        
+        if (left is char)
+            left = (char) left;
+
+        if (left is int)
+            left = (int) left;
+        
+        if (right is float)
+            right = (float) right;
+        
+        if (right is int)
+            right = (int) right;
+
+        if (left is Array)
+            left = (Array) left;
+        
+        if (right is char)
+            right = (char) right;
+        
+
+        switch (Operation)
+        {
+            case BinaryOperation.Plus:
+            {
+                return left + right;
+            }
+            case BinaryOperation.Minus:
+            {
+                return left - right;
+            }
+            case BinaryOperation.Div:
+            {
+                return left / right;
+            }
+            case BinaryOperation.Mul:
+            {
+                return left * right;
+            }
+            case BinaryOperation.Gt:
+            {
+                return left > right;
+            }
+            case BinaryOperation.Gte:
+            {
+                return left >= right;
+            }
+            case BinaryOperation.Lt:
+            {
+                return left < right;
+            }
+            case BinaryOperation.Lte:
+            {
+                return left <= right;
+            }
+            case BinaryOperation.And:
+            {
+                return left && right;
+            }
+            case BinaryOperation.Or:
+            {
+                return left || right;
+            }
+            case BinaryOperation.Eq:
+            {
+                return left == right;
+            }
+            case BinaryOperation.ArrVal:
+            {
+                return left[right];
+            }
+        }
+        
+        return null;
     }
 }

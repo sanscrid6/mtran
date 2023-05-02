@@ -9,6 +9,11 @@ public class ReturnNode: BaseNode
         Value = value;
     }
 
+    public override object? Execute()
+    {
+        return Value?.Execute();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + $"return\n" + 

@@ -18,4 +18,11 @@ public class CoutNode: BaseNode
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "cout:\n" + Out.DumpList(level + 1);
     }
+
+    public override object? Execute()
+    {
+        var r = Out.Aggregate("", (acc, val) => acc + val.Execute().ToString());
+        Console.Write(r);
+        return null;
+    }
 }

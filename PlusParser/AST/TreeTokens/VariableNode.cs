@@ -27,4 +27,14 @@ public class VariableNode: BaseNode
 
         return DrawLevel(level) + Name; 
     }
+
+    public override string ToString()
+    {
+        return Tables.GetValue(Name).ToString();
+    }
+
+    public override object? Execute()
+    {
+        return Tables.GetValue(Name);
+    }
 }

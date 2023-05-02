@@ -18,4 +18,14 @@ public class FloatConstantNode: LiteralNode
 
         return DrawLevel(level) + $"{Value}";
     }
+
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
+
+    public override object? Execute()
+    {
+        return Value;
+    }
 }

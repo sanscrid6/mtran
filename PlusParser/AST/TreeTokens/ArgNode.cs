@@ -17,12 +17,12 @@ public class ArgNode: BaseNode
 
     public override void Analyze()
     {
-        if (Tables.variables.ContainsKey(Name))
+        if (Tables.variablesSemantic.ContainsKey(Name))
         {
-            Tables.variables.Remove(Name);
+            Tables.variablesSemantic.Remove(Name);
         }
         
-        Tables.variables.Add(Name, new Arg
+        Tables.variablesSemantic.Add(Name, new Arg
         {
             name = Name,
             isArr = IsArray,

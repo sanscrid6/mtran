@@ -17,6 +17,18 @@ public class WhileNode: BaseNode
         Body.Analyze();
     }
 
+    public override object? Execute()
+    {
+        Tables.AddScope("while");
+        while ((bool) Cond.Execute())
+        {
+            Body.Execute();
+        }
+        Tables.RemoveScope();
+
+        return null;
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "while:\n" +

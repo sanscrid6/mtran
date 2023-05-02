@@ -16,6 +16,15 @@ public class FunctionCallNode: BaseNode
         Args.ForEach(arg => arg.Analyze());
     }
 
+    public override object? Execute()
+    {
+        var args = Args.Select(arg => arg.Execute()).ToList();
+        //args.Print();
+        //Console.WriteLine(args.Count);
+        Tables.ExecuteFunction(Name.Name, args);
+        return null;
+    }
+
 
     public override string Dump(int level, bool isNode = false)
     {

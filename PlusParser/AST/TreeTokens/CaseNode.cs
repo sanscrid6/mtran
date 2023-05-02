@@ -21,6 +21,14 @@ public class CaseNode: BaseNode
         Body.Analyze();
     }
 
+    public override object? Execute()
+    {
+        Tables.AddScope("case");
+        Body.Execute();
+        Tables.RemoveScope();
+        return null;
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "case:\n" +

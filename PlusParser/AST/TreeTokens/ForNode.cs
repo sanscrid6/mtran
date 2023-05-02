@@ -1,3 +1,5 @@
+using System.Formats.Asn1;
+
 namespace PlusParser.AST.TreeTokens;
 
 public class ForNode: BaseNode
@@ -22,6 +24,19 @@ public class ForNode: BaseNode
         Condition.Analyze();
         Increment.Analyze();
         Body.Analyze();
+    }
+
+    public override object? Execute()
+    {
+        Tables.AddScope("for");
+        Assign.Execute();
+        while ((bool)Condition.Execute())
+        {
+            Body.Execute();
+            Increment.Execute();
+        }
+        Tables.RemoveScope();
+        return null;
     }
 
     public override string Dump(int level, bool isNode = false)

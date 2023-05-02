@@ -20,4 +20,10 @@ public class AssignStatement: BaseNode
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + VariableName + "\n" + Value.Dump(level + 1);
     }
+
+    public override object? Execute()
+    {
+        Tables.ChangeValue(VariableName, Value.Execute());
+        return null;
+    }
 }

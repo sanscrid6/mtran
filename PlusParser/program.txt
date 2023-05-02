@@ -3,7 +3,7 @@ using namespace std;
 
 int partition(int arr[], int start, int end)
 {
-    int pivot = end[start];
+    int pivot = arr[start];
     int count = 0;
     for (int i = start + 1; i <= end; i++) {
         if (arr[i] <= pivot)
@@ -15,6 +15,7 @@ int partition(int arr[], int start, int end)
     // Sorting left and right parts of the pivot element
     int i = start;
     int j = end;
+    // err ?
     while (i < pivotIndex && j > pivotIndex) {
         while (arr[i] <= pivot) {
             i++;

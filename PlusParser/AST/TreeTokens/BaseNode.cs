@@ -22,6 +22,11 @@ public class BaseNode
             return "";
       }
 
+      public virtual object? Execute()
+      {
+            return default;
+      }
+
       public static string DrawNode(int level)
       {
             return DrawLevel(level - 1)+"└───";

@@ -15,8 +15,13 @@ class Program
         // {
             var lines = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
             var tokens = Lexer.Parse(lines);
-            Parser.BuildAST(tokens);
+            var root = Parser.BuildAST(tokens);
+            //Console.WriteLine($"{root.Dump(0)}");
+            root.Analyze();
+            Tables.EntryNode = root as EntryNode;
+            root.Execute();
             
+
             /*var columnWidth = 20;
             Console.WriteLine($"{"Variable".PadRight(columnWidth)} {"Type".PadRight(columnWidth)}");
             foreach (var (key, value) in Lexer.variables)
@@ -44,9 +49,9 @@ class Program
                 Console.WriteLine($"{keyword.PadRight(columnWidth*3)} {"Constant".PadRight(columnWidth)}");
             }*/
             // }
-        // catch (Exception e)
-        // {
+            // catch (Exception e)
+            // {
             // Console.WriteLine(e.Message);
-        // }
+            // }
     }
 }

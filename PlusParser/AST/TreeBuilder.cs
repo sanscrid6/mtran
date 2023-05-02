@@ -200,8 +200,34 @@ public class TreeBuilder
     public BaseNode ArrDecl(Token<ExpressionToken> type, Token<ExpressionToken> name, List<BaseNode> init)
     {
         var t = GetType(type);
-        
-        return new VariableDeclarationNode(name.Value, t, new ArrInitNode<BaseNode>(init), true);
+
+        switch (t)
+        {
+            case Type.Char:
+            {
+                return new VariableDeclarationNode(
+                    name.Value,
+                    t,
+                    new ArrInitNode<CharConstantNode>(init.Cast<CharConstantNode>().ToList()), true);
+
+            }
+            case Type.Float:
+            {
+                return new VariableDeclarationNode(
+                    name.Value,
+                    t,
+                    new ArrInitNode<FloatConstantNode>(init.Cast<FloatConstantNode>().ToList()), true);
+            }
+            case Type.Int:
+            {
+                return new VariableDeclarationNode(
+                    name.Value,
+                    t,
+                    new ArrInitNode<IntConstantNode>(init.Cast<IntConstantNode>().ToList()), true);
+            }
+        }
+
+        throw new Exception("cannot initialize array");
     }
     
     [Production("arrinit: [INT_LITERAL | FLOAT_LITERAL | CHAR_LITERAL] COMA ? ")]

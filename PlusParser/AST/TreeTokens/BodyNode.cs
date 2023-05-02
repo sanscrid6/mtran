@@ -16,6 +16,14 @@ public class BodyNode: BaseNode
         Lines.ForEach(l => l.Analyze());
     }
 
+    public override object? Execute()
+    {
+        Lines.ForEach(l => l.Execute());
+        var returnNode = Lines.Find(l => l is ReturnNode);
+        
+        return returnNode?.Execute();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         var result = "";

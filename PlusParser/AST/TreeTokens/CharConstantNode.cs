@@ -18,4 +18,14 @@ public class CharConstantNode: LiteralNode
         
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + $"'{Value}'";
     }
+
+    public override object? Execute()
+    {
+        return Value;
+    }
+
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
 }

@@ -19,6 +19,11 @@ public class IntConstantNode: LiteralNode
         return DrawLevel(level) + $"{Value}";
     }
 
+    public override object? Execute()
+    {
+        return Value;
+    }
+
     public override string ToString()
     {
         return $"{Value}";

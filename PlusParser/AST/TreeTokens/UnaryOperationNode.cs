@@ -40,4 +40,32 @@ public class UnaryOperationNode: BaseNode
                DrawLevel(level + 1) + "values:" + "\n" +
                Value.Dump(level + 2, true);
     }
+
+    public override object? Execute()
+    {
+        var name = (Value as VariableNode).Name;
+        dynamic val = Tables.GetValue(name);
+
+        if (val is float)
+            val = (float) val;
+
+        if (val is int)
+            val = (int) val;
+
+        switch (Operation)
+        {
+            case UnaryOperation.Dec:
+            {
+                Tables.ChangeValue(name, val - 1);
+                break;
+            }
+            case UnaryOperation.Inc:
+            {
+                Tables.ChangeValue(name, val + 1);
+                break;
+            }
+        }
+
+        return null;
+    }
 }

@@ -10,7 +10,7 @@ public static class Parser
 {
    private static Tree<TokenBase> _ast = new();
    
-   public static void BuildAST(List<TokenBase> tokens)
+   public static BaseNode? BuildAST(List<TokenBase> tokens)
    {
       /*var curr = _ast.root;
       
@@ -146,17 +146,20 @@ public static class Parser
          if (r.Result == null)
          {
             Console.WriteLine("unknown error");
-            return;
+            return null;
          }
+
+         return r.Result;
          
-         //Console.WriteLine($"{r.Result.Dump(0)}");
-         r.Result.Analyze();
       }
       else
       {
          r?.Errors?.ForEach(error => Console.WriteLine(error));
       }
-      
+
+
+      return null;
+
    }
 
    private static Node<TokenBase> BuildFor(List<TokenBase> tokens, Node<TokenBase> curr)

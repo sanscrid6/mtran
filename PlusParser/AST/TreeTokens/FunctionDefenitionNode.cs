@@ -58,6 +58,33 @@ public class FunctionDefinitionNode: BaseNode
         Body.Analyze();
     }
 
+    public override object? Execute()
+    {
+        Tables.AddScope(Name);
+        Body.Execute();
+        Tables.RemoveScope();
+        return null;
+    }
+
+    public object? Execute(List<object> args)
+    {
+        Tables.AddScope(Name);
+
+        for (int i = 0; i < args.Count; i++)
+        {
+            Tables.AddVariable(Args[i].Name, args[i], new Arg()
+            {
+                name = Args[i].Name,
+                isArr = Args[i].IsArray,
+                type = Args[i].Type
+            });
+
+        }
+        var res = Body.Execute();
+        Tables.RemoveScope();
+        return res;
+    }
+
     public override string Dump(int level, bool isNode = true)
     {
         return

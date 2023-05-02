@@ -20,4 +20,10 @@ public class EntryNode: BaseNode
     {
         Functions.ForEach(f => f.Analyze());
     }
+
+    public override object? Execute()
+    {
+        Main.Execute();
+        return null;
+    }
 }

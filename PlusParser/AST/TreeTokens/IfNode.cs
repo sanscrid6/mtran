@@ -10,7 +10,19 @@ public class IfNode: BaseNode
         Cond = cond;
         Body = body;
     }
-    
+
+    public override object? Execute()
+    {
+        Tables.AddScope("if");
+        if ((bool) Cond.Execute())
+        {
+            Body.Execute();
+        }
+        Tables.RemoveScope();
+        
+        return null;
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "if:\n" +
