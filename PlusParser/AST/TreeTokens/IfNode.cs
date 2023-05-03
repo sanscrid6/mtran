@@ -4,11 +4,13 @@ public class IfNode: BaseNode
 {
     public readonly BaseNode Cond;
     public readonly BaseNode Body;
+    public readonly BaseNode? Else;
 
-    public IfNode(BaseNode cond, BaseNode body)
+    public IfNode(BaseNode cond, BaseNode body, BaseNode? elseNode)
     {
         Cond = cond;
         Body = body;
+        Else = elseNode;
     }
 
     public override object? Execute()
@@ -26,6 +28,18 @@ public class IfNode: BaseNode
                 throw;
             }
 
+        }
+        else
+        {
+            try
+            {
+                Else?.Execute();
+            }
+            catch (ReturnEx e)
+            {
+                Tables.RemoveScope();
+                throw;
+            }
         }
         Tables.RemoveScope();
         

@@ -84,7 +84,13 @@ public class TreeBuilder
     [Production("if: IF [d] LPAREN [d] boolexpression RPAREN [d] [block | line]")]
     public BaseNode If(BaseNode cond, BaseNode body)
     {
-        return new IfNode(cond, body);
+        return new IfNode(cond, body, null);
+    }
+    
+    [Production("if: IF [d] LPAREN [d] boolexpression RPAREN [d] block ELSE [d] block ")]
+    public BaseNode IfElse(BaseNode cond, BaseNode body, BaseNode elseBody)
+    {
+        return new IfNode(cond, body, elseBody);
     }
     
     [Production("while: WHILE [d] LPAREN [d] boolexpression RPAREN [d] block")]
@@ -247,7 +253,6 @@ public class TreeBuilder
     }
 
     [Production("vardecl: [INT | FLOAT | STRING | CHAR] VARIABLE (ASSIGN [d] expression) ?")]
-    //[Production("vardecl: [INT | FLOAT | STRING | CHAR] VARIABLE (ASSIGN [d] funccall) ?")]
     public BaseNode TypeDecl(Token<ExpressionToken> type, Token<ExpressionToken> name,ValueOption<Group<ExpressionToken, BaseNode>> expr)
     {
         var t = GetType(type);
@@ -259,6 +264,20 @@ public class TreeBuilder
         }
         
         return new VariableDeclarationNode(name.Value, t, null);
+    }
+
+    [Production("assigncoma: assign COMA ?")]
+    public BaseNode AssignNode(BaseNode assign, Token<ExpressionToken> t)
+    {
+        return assign;
+    }
+
+    [Production("vardecl: [INT | FLOAT | STRING | CHAR] assigncoma *")]
+    public BaseNode TypeDeclMany(Token<ExpressionToken> type, List<BaseNode> expr)
+    {
+        var t = GetType(type);
+
+        return  new MultipleVariableDeclarationNode(t, expr.Cast<AssignNode>().ToList());
     }
     
     
@@ -299,7 +318,7 @@ public class TreeBuilder
     [Production("assign: VARIABLE ASSIGN [d] expression")]
     public BaseNode AssignStmt(Token<ExpressionToken> variable, BaseNode value)
     {
-        var assign = new AssignStatement(variable.StringWithoutQuotes, value);
+        var assign = new AssignNode(variable.StringWithoutQuotes, value);
         return assign;
     }
 
@@ -458,6 +477,12 @@ public class TreeBuilder
     
     [Production("term: VARIABLE LSQUARE [d] expression RSQUARE [d]")]
     public BaseNode TermArr(Token<ExpressionToken> variable, BaseNode expr)
+    {
+        return new BinaryOperationNode(new VariableNode(variable.Value), expr, BinaryOperation.ArrVal);
+    }
+    
+    [Production("term: VARIABLE LSQUARE [d] unary RSQUARE [d]")]
+    public BaseNode TermArrUnary(Token<ExpressionToken> variable, BaseNode expr)
     {
         return new BinaryOperationNode(new VariableNode(variable.Value), expr, BinaryOperation.ArrVal);
     }

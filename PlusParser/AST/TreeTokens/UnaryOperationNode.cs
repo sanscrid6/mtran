@@ -66,6 +66,6 @@ public class UnaryOperationNode: BaseNode
             }
         }
 
-        return null;
+        return val;
     }
 }

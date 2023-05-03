@@ -13,8 +13,7 @@ int partition(int arr[], int start, int end)
     int pivotIndex = start + count;
     swap(arr[pivotIndex], arr[start]);
     // Sorting left and right parts of the pivot element
-    int i = start;
-    int j = end;
+    int i = start, j = end;
     while (i < pivotIndex && j > pivotIndex) {
         while (arr[i] <= pivot) {
             i++;
@@ -23,9 +22,7 @@ int partition(int arr[], int start, int end)
             j--;
         }
         if (i < pivotIndex && j > pivotIndex) {
-            swap(arr[i], arr[j]);
-             i++;
-             j--;   
+            swap(arr[i++], arr[j--]);
         }
     }
     return pivotIndex;

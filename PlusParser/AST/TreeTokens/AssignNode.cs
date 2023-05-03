@@ -1,11 +1,11 @@
 namespace PlusParser.AST.TreeTokens;
 
-public class AssignStatement: BaseNode
+public class AssignNode: BaseNode
 {
     public readonly string VariableName;
     public readonly BaseNode Value;
 
-    public AssignStatement(string name, BaseNode val)
+    public AssignNode(string name, BaseNode val)
     {
         VariableName = name;
         Value = val;

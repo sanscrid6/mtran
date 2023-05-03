@@ -3,8 +3,7 @@ using namespace std;
 
 int main() {
     char setOperator;
-    float firstNum = 0.00;
-    float secondNum = 0.00;
+    float firstNum = 0.00, secondNum = 0.00;
     cout << "Enter your operater: +, -, *, /: \n";
     cin >> setOperator;
     cout << "Enter your first calculation: \n";

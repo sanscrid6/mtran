@@ -25,13 +25,6 @@ public class BodyNode: BaseNode
     {
         for (int i = 0; i < Lines.Count; i++)
         {
-            if (Lines[i] is ReturnNode)
-            {
-                var ex = new ReturnEx();
-                ex.Value = Lines[i].Execute();
-                throw ex;
-            }
-
             Lines[i].Execute();
         }
 

@@ -25,8 +25,8 @@ public class FunctionCallNode: BaseNode
             var left = Args[0];
             var right = Args[1];
 
-            var indexLeft = ((left as BinaryOperationNode).Right as VariableNode).Name;
-            var indexRight =  ((right as BinaryOperationNode).Right as VariableNode).Name;
+            var indexLeft = (int)(left as BinaryOperationNode).Right.Execute();
+            var indexRight =  (int)(right as BinaryOperationNode).Right.Execute();
             
             void Swap<T>(T[] array, int index1, int index2)
             {
@@ -35,7 +35,7 @@ public class FunctionCallNode: BaseNode
                 array[index2] = temp;
             }
             
-            Swap(Tables.GetValue("arr") as int[], (int)Tables.GetValue(indexLeft), (int)Tables.GetValue(indexRight));
+            Swap(Tables.GetValue("arr") as int[], indexLeft, indexRight);
         }
         else
         {

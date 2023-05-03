@@ -11,7 +11,9 @@ public class ReturnNode: BaseNode
 
     public override object? Execute()
     {
-        return Value?.Execute();
+        var ex = new ReturnEx();
+        ex.Value = Value?.Execute();
+        throw ex;
     }
 
     public override string Dump(int level, bool isNode = false)
