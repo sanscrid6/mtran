@@ -27,7 +27,7 @@ public class EntryNode: BaseNode
         {
             Main.Execute();
         }
-        catch (Exception e)
+        catch (ReturnEx e)
         {
            
         }

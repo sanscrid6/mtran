@@ -103,13 +103,6 @@ public class BinaryOperationNode: ExpressionNode
     {
         dynamic left = Left.Execute();
         dynamic right = Right.Execute();
-        
-        
-        /*Console.WriteLine(Operation);
-        if(left is not null)
-        Console.WriteLine(left);
-        if(right is not null)
-        Console.WriteLine(right);*/
 
         if (left is float)
             left = (float) left;
@@ -145,6 +138,11 @@ public class BinaryOperationNode: ExpressionNode
             }
             case BinaryOperation.Div:
             {
+                if (right == 0)
+                {
+                    throw new DivideByZeroException();
+                }
+
                 return left / right;
             }
             case BinaryOperation.Mul:

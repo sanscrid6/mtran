@@ -33,8 +33,6 @@ public class UnaryOperationNode: BaseNode
 
     public override string Dump(int level, bool isNode = false)
     {
-        //return DrawLevel(level) + $"{EnumToSymbol[Operation]}\n" + Value.Dump(level + 1);
-        
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "operation:\n" + 
                DrawNode(level + 1) + $"{EnumToSymbol[Operation]}\n" + 
                DrawLevel(level + 1) + "values:" + "\n" +

@@ -13,7 +13,7 @@ class Program
     {
         // try
         // {
-            var lines = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
+        var lines = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
             var tokens = Lexer.Parse(lines);
             var root = Parser.BuildAST(tokens);
             //Console.WriteLine($"{root.Dump(0)}");
