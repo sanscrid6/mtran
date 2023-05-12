@@ -18,7 +18,9 @@ public class CaseNode: BaseNode
         {
             throw new Exception("expected break statement in case");
         }*/
+        Tables.AddScope("case");
         Body.Analyze();
+        Tables.RemoveScope();
     }
 
     public override object? Execute()

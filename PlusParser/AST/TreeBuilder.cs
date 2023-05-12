@@ -166,6 +166,7 @@ public class TreeBuilder
     [Production("line: funccall (SEMICOLON [d])?")]
     [Production("line: arrdecl (SEMICOLON [d])?")]
     [Production("line: break (SEMICOLON [d])?")]
+    [Production("line: goto (SEMICOLON [d])?")]
     public BaseNode Line(BaseNode sequence, ValueOption<Group<ExpressionToken, BaseNode>> option)
     {
         if (option.IsNone)
@@ -173,6 +174,12 @@ public class TreeBuilder
             throw new Exception("cant find semicolon");
         }
 
+        return sequence;
+    }
+    
+    [Production("line: gotomark ")]
+    public BaseNode L(BaseNode sequence)
+    {
         return sequence;
     }
 
@@ -202,35 +209,70 @@ public class TreeBuilder
         return new FunctionDefinitionNode(name.Value, args.Cast<ArgNode>().ToList(), t, block as BodyNode); 
     }
     
+    /*[Production("fielddecl: [INT | FLOAT | STRING | CHAR | VOID] VARIABLE SEMICOLON [d]")]
+    public BaseNode FiledDecl(Token<ExpressionToken> type, BaseNode var)
+    {
+        var t = GetType(type);
+
+        return new FunctionDefinitionNode(name.Value, args.Cast<ArgNode>().ToList(), t, block as BodyNode); 
+    }*/
+    
+    /*[Production("classdecl: CLASS VARIABLE OPENBLOCK [d] PUBLIC [d] COLON [d] fielddecl+ CLOSEBLOCK [d]")]
+    public BaseNode ClassDecl(BaseNode name, List<BaseNode> fields)
+    {
+        var t = GetType(type);
+
+        return new FunctionDefinitionNode(name.Value, args.Cast<ArgNode>().ToList(), t, block as BodyNode); 
+    }*/
+    
+    [Production("goto: GOTO [d] VARIABLE ")]
+    public BaseNode GotoDecl(Token<ExpressionToken> name)
+    {
+        return new GotoNode(new VariableNode(name.StringWithoutQuotes)); 
+    }
+    
+    [Production("gotomark: VARIABLE COLON [d]")]
+    public BaseNode GotoMarkDecl(Token<ExpressionToken> name)
+    {
+        return new GotoMarkNode(new VariableNode(name.StringWithoutQuotes)); 
+    }
+    
     [Production("arrdecl: [INT | FLOAT | STRING | CHAR] VARIABLE LSQUARE [d] RSQUARE [d] ASSIGN [d] OPENBLOCK [d] arrinit+ CLOSEBLOCK [d] ")]
     public BaseNode ArrDecl(Token<ExpressionToken> type, Token<ExpressionToken> name, List<BaseNode> init)
     {
         var t = GetType(type);
 
-        switch (t)
+        try
         {
-            case Type.Char:
+            switch (t)
             {
-                return new VariableDeclarationNode(
-                    name.Value,
-                    t,
-                    new ArrInitNode<CharConstantNode>(init.Cast<CharConstantNode>().ToList()), true);
+                case Type.Char:
+                {
+                    return new VariableDeclarationNode(
+                        name.Value,
+                        t,
+                        new ArrInitNode<CharConstantNode>(init.Cast<CharConstantNode>().ToList()), true);
 
+                }
+                case Type.Float:
+                {
+                    return new VariableDeclarationNode(
+                        name.Value,
+                        t,
+                        new ArrInitNode<FloatConstantNode>(init.Cast<FloatConstantNode>().ToList()), true);
+                }
+                case Type.Int:
+                {
+                    return new VariableDeclarationNode(
+                        name.Value,
+                        t,
+                        new ArrInitNode<IntConstantNode>(init.Cast<IntConstantNode>().ToList()), true);
+                }
             }
-            case Type.Float:
-            {
-                return new VariableDeclarationNode(
-                    name.Value,
-                    t,
-                    new ArrInitNode<FloatConstantNode>(init.Cast<FloatConstantNode>().ToList()), true);
-            }
-            case Type.Int:
-            {
-                return new VariableDeclarationNode(
-                    name.Value,
-                    t,
-                    new ArrInitNode<IntConstantNode>(init.Cast<IntConstantNode>().ToList()), true);
-            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception("array initialization should be same type");
         }
 
         throw new Exception("cannot initialize array");

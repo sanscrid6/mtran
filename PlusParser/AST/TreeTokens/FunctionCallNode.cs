@@ -13,6 +13,14 @@ public class FunctionCallNode: BaseNode
 
     public override void Analyze()
     {
+        if (Name.Name != "swap")
+        {
+            if (Args.Count != Tables.EntryNode.Functions.Find(f => f.Name == Name.Name)!.Args.Count)
+            {
+                throw new Exception("argument count missmatch");
+            }
+        }
+
         Args.ForEach(arg => arg.Analyze());
     }
 

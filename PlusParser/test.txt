@@ -1,0 +1,57 @@
+#include <iostream>
+using namespace std;
+
+class Car {
+  public:
+    string brand;   
+    string model;
+    int year;
+};
+
+int main() {
+    Car carObj1;
+    carObj1.brand = "BMW";
+    carObj1.model = "X5";
+    carObj1.year = 1999;
+    
+    Car carObj2;
+    carObj2.brand = "Ford";
+    carObj2.model = "Mustang";
+    carObj2.year = 1969;
+    
+    Car carObj3;
+    carObj3.brand = "Ford";
+    carObj3.model = "Mustang";
+    carObj3.year = 1969;
+     
+    Car cars[] = {carObj1, carObj2, carObj3}
+    
+    int choice;
+    int choiceInner;
+    
+    cin >> choice;
+   
+    switch(choice) {
+        case 1:
+            switch (choiceInner) {
+                case 1: 
+                    break;
+                case 2: 
+                    break;
+            }
+        
+            break;
+        case 2:
+            int choiceInner;
+                        
+            switch (choiceInner) {
+                 case 1: 
+                     break;
+                 case 2: 
+                     break;
+            }
+            
+            break;
+    }
+    return 0;
+}

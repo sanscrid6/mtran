@@ -12,6 +12,16 @@ public static class Parser
    
    public static BaseNode? BuildAST(List<TokenBase> tokens)
    {
+      if (tokens.Count(t => t is OpenCodeBlockToken) != tokens.Count(t => t is CloseCodeBlockToken))
+      {
+         TokenBase.BuildError("missing }");
+      }
+      
+      if (tokens.Count(t => t is OpenParamsToken) != tokens.Count(t => t is CloseParamsToken))
+      {
+         TokenBase.BuildError("missing )");
+      }
+      
       /*var curr = _ast.root;
       
       var s = tokens.Aggregate(new List<List<TokenBase>>(), (acc, curr) =>
@@ -39,15 +49,7 @@ public static class Parser
          }
       });
 
-      if (tokens.Count(t => t is OpenCodeBlockToken) != tokens.Count(t => t is CloseCodeBlockToken))
-      {
-         TokenBase.BuildError("missing }");
-      }
-      
-      if (tokens.Count(t => t is OpenParamsToken) != tokens.Count(t => t is CloseParamsToken))
-      {
-         TokenBase.BuildError("missing )");
-      }
+     
 
 
       for (int i = 0; i < s.Count; i++)

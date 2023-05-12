@@ -46,6 +46,17 @@ public class IfNode: BaseNode
         return null;
     }
 
+    public override void Analyze()
+    {
+        Cond.Analyze();
+        Tables.AddScope("if");
+        Body.Analyze();
+        Tables.RemoveScope();
+        Tables.AddScope("else");
+        Else?.Analyze();
+        Tables.RemoveScope();
+    }
+
     public override string Dump(int level, bool isNode = false)
     {
         return (!isNode ? DrawLevel(level) : DrawNode(level)) + "if:\n" +

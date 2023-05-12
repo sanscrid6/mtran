@@ -160,6 +160,25 @@ public enum ExpressionToken
     
     [Lexeme(@"break")]
     BREAK = 64,
+    
+    [Lexeme(@"goto")]
+    GOTO = 65,
+
+
+
+    /*[Lexeme("class")]
+    CLASS = 65,
+    
+    [Lexeme("public")]
+    PUBLIC = 66,
+    
+    [Lexeme(@"\.")]
+    DOT = 67,
+    
+    [Lexeme(@"Car")]
+    CAR = 68,
+    
+    */
 
     #endregion
     

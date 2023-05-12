@@ -14,7 +14,9 @@ public class WhileNode: BaseNode
     public override void Analyze()
     {
         Cond.Analyze();
+        Tables.AddScope("while");
         Body.Analyze();
+        Tables.RemoveScope();
     }
 
     public override object? Execute()

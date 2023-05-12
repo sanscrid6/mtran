@@ -49,8 +49,8 @@ public class BinaryOperationNode: ExpressionNode
 
             if (Right is VariableNode variableNode)
             {
-                var arg = Tables.variablesSemantic[variableNode.Name];
-                if (!Tables.variablesSemantic[(Left as VariableNode).Name].isArr)
+                var arg = Tables.GetMetadata(variableNode.Name);
+                if (!Tables.GetMetadata((Left as VariableNode).Name).isArr)
                 {
                     throw new Exception("expected array in [] operation");
                 }
@@ -71,7 +71,7 @@ public class BinaryOperationNode: ExpressionNode
 
             if (Left is VariableNode variableNode)
             {
-                var type = Tables.variablesSemantic[variableNode.Name];
+                var type = Tables.GetMetadata(variableNode.Name);
                 if (!type.isArr && type.type is not Type.Int and not Type.Float)
                 {
                     throw new Exception("expected int or float variable in arifmetic expression");

@@ -20,10 +20,13 @@ public class ForNode: BaseNode
 
     public override void Analyze()
     {
+        Tables.AddScope("for");
         Assign.Analyze();
         Condition.Analyze();
         Increment.Analyze();
         Body.Analyze();
+        Tables.RemoveScope();
+
     }
 
     public override object? Execute()
@@ -44,6 +47,7 @@ public class ForNode: BaseNode
             Increment.Execute();
         }
         Tables.RemoveScope();
+
         return null;
     }
 

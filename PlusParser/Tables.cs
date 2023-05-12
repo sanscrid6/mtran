@@ -25,7 +25,10 @@ public class Scope
 public static class Tables
 {
     public static List<FunctionDefinition> functions = new();
-    public static Dictionary<string, Arg> variablesSemantic = new();
+    public static int Run = 0;
+
+    public static List<string> gotos = new();
+    //public static Dictionary<string, Arg> variablesSemantic = new();
     
     //public static string Scope = "";
 
@@ -34,6 +37,19 @@ public static class Tables
     private static List<Scope> Scopes = new();
     // scope: [name: metadata]
     private static Dictionary<string, Dictionary<string, Tuple<object?, Arg>>> variables = new();
+
+    public static bool ExistsInScope(string name)
+    {
+        for (int i = Scopes.Count - 1; i >= 0; i--)
+        {
+            if (Scopes[i].variables.ContainsKey(name))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static void AddScope(string name)
     {

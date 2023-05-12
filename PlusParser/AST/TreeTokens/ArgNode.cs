@@ -17,12 +17,12 @@ public class ArgNode: BaseNode
 
     public override void Analyze()
     {
-        if (Tables.variablesSemantic.ContainsKey(Name))
+        if (Tables.ExistsInScope(Name))
         {
-            Tables.variablesSemantic.Remove(Name);
+            throw new Exception($"{Name} already exists");
         }
         
-        Tables.variablesSemantic.Add(Name, new Arg
+        Tables.AddVariable(Name, null, new Arg
         {
             name = Name,
             isArr = IsArray,

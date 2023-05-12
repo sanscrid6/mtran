@@ -20,6 +20,7 @@ public class FunctionDefinitionNode: BaseNode
 
     public override void Analyze()
     {
+        Tables.AddScope(Name);
         Args.ForEach(arg => arg.Analyze());
         var returnNode = Body.Lines.Find(l => l is ReturnNode) as ReturnNode;
         if (ReturnType == Type.Int)
@@ -56,6 +57,7 @@ public class FunctionDefinitionNode: BaseNode
         }
         
         Body.Analyze();
+        Tables.RemoveScope();
     }
 
     public override object? Execute()

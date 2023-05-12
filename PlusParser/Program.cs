@@ -1,5 +1,6 @@
 ﻿using PlusParser.AST;
 using PlusParser.AST.TreeTokens;
+using PlusParser.Tokens.Tokens;
 using sly.parser;
 using sly.parser.generator;
 using sly.parser.syntax.tree;
@@ -14,11 +15,13 @@ class Program
         // try
         // {
         var lines = File.ReadAllText(@"D:\lab\mtran\PlusParser\program.txt");
-            var tokens = Lexer.Parse(lines);
-            var root = Parser.BuildAST(tokens);
+            //var tokens = Lexer.Parse(lines);
+            var root = Parser.BuildAST(new List<TokenBase>());
             //Console.WriteLine($"{root.Dump(0)}");
-            root.Analyze();
             Tables.EntryNode = root as EntryNode;
+            /*root.Analyze();
+            Tables.Run += 1;
+            root.Analyze();*/
             root.Execute();
             
 

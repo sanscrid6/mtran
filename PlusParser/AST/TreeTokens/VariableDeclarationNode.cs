@@ -19,16 +19,16 @@ public class VariableDeclarationNode: BaseNode
 
     public override void Analyze()
     {
-        if (Tables.variablesSemantic.ContainsKey(Name))
+        if (Tables.ExistsInScope(Name))
         {
-            Tables.variablesSemantic.Remove(Name);
+            throw new Exception($"{Name} already exists in scope");
         }
         
-        Tables.variablesSemantic.Add(Name, new Arg
+        Tables.AddVariable(Name, null, new Arg
         {
+            isArr = IsArray,
             name = Name,
-            type = Type,
-            isArr = IsArray
+            type = Type
         });
 
         if (Value is LiteralNode)

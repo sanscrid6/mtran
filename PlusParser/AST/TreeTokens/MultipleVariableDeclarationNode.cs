@@ -16,12 +16,13 @@ public class MultipleVariableDeclarationNode: BaseNode
     {
         foreach (var n in Nodes)
         {
-            if (Tables.variablesSemantic.ContainsKey(n.VariableName))
+            if (Tables.ExistsInScope(n.VariableName))
             {
-                Tables.variablesSemantic.Remove(n.VariableName);
+                //Tables..Remove(n.VariableName);
+                throw new Exception($"{n.VariableName} already exists");
             }
         
-            Tables.variablesSemantic.Add(n.VariableName, new Arg
+            Tables.AddVariable(n.VariableName, null, new Arg
             {
                 name = n.VariableName,
                 type = Type,
